@@ -1,6 +1,7 @@
 package com.algaworks.algafood.domain.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,32 +20,27 @@ public class CadastroRestauranteService {
 	
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
-	
-	
+
 	public Restaurante salvar(Restaurante restaurante) {
 		Long cozinhaId = restaurante.getCozinha().getId();
-		Cozinha cozinha = cozinhaRepository.buscar(cozinhaId);
-		
-		if(cozinha == null) {
-			throw new EntidadeNaoEncontradaException(
-			String.format("Não existe cadastro de cozinha com código %d", cozinhaId));
-		}
+
+		Cozinha cozinha = cozinhaRepository.findById(cozinhaId)
+				.orElseThrow(() -> new EntidadeNaoEncontradaException(
+						String.format("Não existe cadastro de cozinha com código %d", cozinhaId)));
+
 		restaurante.setCozinha(cozinha);
 		
 		
-		return restauranteRepository.salvar(restaurante);
+		return restauranteRepository.save(restaurante);
 	}
 	
 	public List<Restaurante> getRestaurantes() {
-		return restauranteRepository.listar();
+		return restauranteRepository.findAll();
 	}
 	
-	public Restaurante getById(Long id) {
-		Restaurante restaurante = restauranteRepository.buscar(id);
-		if(restaurante != null) {
-			return restauranteRepository.buscar(restaurante.getId());
-		}
-		return null;
+	public Restaurante findById(Long id) {
+		Optional<Restaurante> restaurante = restauranteRepository.findById(id);
+		return restaurante.get();
 	}
 	
 }
