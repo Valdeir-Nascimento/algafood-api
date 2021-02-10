@@ -15,17 +15,17 @@ import lombok.Setter;
 @Getter
 @Entity
 public class Permissao {
-	
-	
-	@EqualsAndHashCode.Include
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Id
-	private Long id;
-	
-	@Column(nullable = false)
-	private String nome;
-	
-	@Column(nullable = false)
-	private String descricao;
-	
+
+
+    @EqualsAndHashCode.Include
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    private Long id;
+
+    @Column(nullable = false)
+    private String nome;
+
+    @Column(nullable = false)
+    private String descricao;
+
 }

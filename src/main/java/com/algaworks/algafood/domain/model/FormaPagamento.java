@@ -15,17 +15,17 @@ import lombok.Setter;
 @Getter
 @Entity
 public class FormaPagamento {
-	
-	@EqualsAndHashCode.Include
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Id
-	private Long id;
-	
-	@Column(nullable = false)
-	private String descricao;
-	
-	//@ManyToOne
-	//@JoinColumn(name = "restaurante_id")
-	//private Restaurante restaurante;
-	
+
+    @EqualsAndHashCode.Include
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    private Long id;
+
+    @Column(nullable = false)
+    private String descricao;
+
+    //@ManyToOne
+    //@JoinColumn(name = "restaurante_id")
+    //private Restaurante restaurante;
+
 }

@@ -17,15 +17,15 @@ import lombok.Setter;
 @Getter
 @Entity
 public class Cidade {
-	@EqualsAndHashCode.Include
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Id
-	private Long id;
-	
-	@Column(nullable = false)
-	private String nome;
-	
-	@JoinColumn(name = "estado_id", nullable = false)
-	@ManyToOne
-	private Estado estado;
+    @EqualsAndHashCode.Include
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    private Long id;
+
+    @Column(nullable = false)
+    private String nome;
+
+    @JoinColumn(name = "estado_id", nullable = false)
+    @ManyToOne
+    private Estado estado;
 }

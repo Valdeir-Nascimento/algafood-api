@@ -16,40 +16,40 @@ import java.util.Optional;
 
 @Service
 public class CadastroCidadeService {
-	@Autowired
-	private CidadeRepository cidadeRepository;
-	
-	@Autowired
-	private EstadoRepository estadoRepository;
-	
-	public Cidade save(Cidade cidade) {
-		Long estadoId = cidade.getEstado().getId();
-		Estado estado = estadoRepository
-				.findById(estadoId)
-				.orElseThrow(() -> new EntidadeNaoEncontradaException(String
-				.format("Não existe cadastro de estado com código %d", estadoId)));
+    @Autowired
+    private CidadeRepository cidadeRepository;
 
-		cidade.setEstado(estado);
-		return cidadeRepository.save(cidade);
-	}
-	
-	public Cidade findById(Long cidadeId) {
-		Optional<Cidade> cidade = cidadeRepository.findById(cidadeId);
-		return cidade.get();
-	}
-	
-	public void deleteById(Long cidadeId) {
-		try {
-			cidadeRepository.deleteById(cidadeId);
-			
-		} catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(String
-					.format("Não existe um cadastro de cozinha com código %d", cidadeId));
-			
-		} catch (DataIntegrityViolationException e) {
-			throw new EntidadeEmUsoException(String
-					.format("Cidade de ID %d  não pode ser removida, pois está em uso", cidadeId));
-		}
-	}
-	
+    @Autowired
+    private EstadoRepository estadoRepository;
+
+    public Cidade save(Cidade cidade) {
+        Long estadoId = cidade.getEstado().getId();
+        Estado estado = estadoRepository
+                .findById(estadoId)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(String
+                        .format("Não existe cadastro de estado com código %d", estadoId)));
+
+        cidade.setEstado(estado);
+        return cidadeRepository.save(cidade);
+    }
+
+    public Cidade findById(Long cidadeId) {
+        Optional<Cidade> cidade = cidadeRepository.findById(cidadeId);
+        return cidade.get();
+    }
+
+    public void deleteById(Long cidadeId) {
+        try {
+            cidadeRepository.deleteById(cidadeId);
+
+        } catch (EmptyResultDataAccessException e) {
+            throw new EntidadeNaoEncontradaException(String
+                    .format("Não existe um cadastro de cozinha com código %d", cidadeId));
+
+        } catch (DataIntegrityViolationException e) {
+            throw new EntidadeEmUsoException(String
+                    .format("Cidade de ID %d  não pode ser removida, pois está em uso", cidadeId));
+        }
+    }
+
 }

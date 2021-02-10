@@ -14,33 +14,33 @@ import com.algaworks.algafood.domain.repository.RestauranteRepository;
 
 @Service
 public class CadastroRestauranteService {
-	
-	@Autowired
-	private RestauranteRepository restauranteRepository;
-	
-	@Autowired
-	private CozinhaRepository cozinhaRepository;
 
-	public Restaurante salvar(Restaurante restaurante) {
-		Long cozinhaId = restaurante.getCozinha().getId();
+    @Autowired
+    private RestauranteRepository restauranteRepository;
 
-		Cozinha cozinha = cozinhaRepository.findById(cozinhaId)
-				.orElseThrow(() -> new EntidadeNaoEncontradaException(
-						String.format("Não existe cadastro de cozinha com código %d", cozinhaId)));
+    @Autowired
+    private CozinhaRepository cozinhaRepository;
 
-		restaurante.setCozinha(cozinha);
-		
-		
-		return restauranteRepository.save(restaurante);
-	}
-	
-	public List<Restaurante> getRestaurantes() {
-		return restauranteRepository.findAll();
-	}
-	
-	public Restaurante findById(Long id) {
-		Optional<Restaurante> restaurante = restauranteRepository.findById(id);
-		return restaurante.get();
-	}
-	
+    public Restaurante salvar(Restaurante restaurante) {
+        Long cozinhaId = restaurante.getCozinha().getId();
+
+        Cozinha cozinha = cozinhaRepository.findById(cozinhaId)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        String.format("Não existe cadastro de cozinha com código %d", cozinhaId)));
+
+        restaurante.setCozinha(cozinha);
+
+
+        return restauranteRepository.save(restaurante);
+    }
+
+    public List<Restaurante> getRestaurantes() {
+        return restauranteRepository.findAll();
+    }
+
+    public Restaurante findById(Long id) {
+        Optional<Restaurante> restaurante = restauranteRepository.findById(id);
+        return restaurante.get();
+    }
+
 }

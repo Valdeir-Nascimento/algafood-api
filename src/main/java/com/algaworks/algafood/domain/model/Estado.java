@@ -15,12 +15,12 @@ import lombok.Setter;
 @Getter
 @Entity
 public class Estado {
-	
-	@EqualsAndHashCode.Include
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Id
-	private Long id;
-	
-	@Column(nullable = false)
-	private String nome;
+
+    @EqualsAndHashCode.Include
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    private Long id;
+
+    @Column(nullable = false)
+    private String nome;
 }

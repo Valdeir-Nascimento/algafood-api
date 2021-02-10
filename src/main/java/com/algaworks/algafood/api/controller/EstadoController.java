@@ -27,64 +27,64 @@ import com.algaworks.algafood.domain.service.CadastroEstadoService;
 @RequestMapping("/estados")
 public class EstadoController {
 
-	@Autowired
-	private CadastroEstadoService estadoService;
-	
-	@GetMapping
-	public List<Estado> listar(){
-		return estadoService.findAll();
-	}
-	
-	@GetMapping("/{estadoId}")
-	public ResponseEntity<Estado> buscar(@PathVariable("estadoId") Long estadoId) {
-		
-		Estado estado = estadoService.findById(estadoId);
-		if(estado != null) {
-			return ResponseEntity.ok(estado);
-		} 
-		
-		return ResponseEntity.notFound().build();
-		
-	}
-	
-	@ResponseStatus(HttpStatus.CREATED)
-	@PostMapping
-	public Estado adicionar(@RequestBody Estado estado) {
-		return estadoService.save(estado);
-	}
-	
-	@PutMapping("/{estadoId}")
-	public ResponseEntity<?> atualizar(@PathVariable("estadoId") Long estadoId, @RequestBody Estado estado) {
-		try {
-			Estado estadoAtual = estadoService.findById(estadoId);
-			if(estadoAtual != null) {
-				BeanUtils.copyProperties(estado, estadoAtual, "id");
-				estadoAtual = estadoService.save(estadoAtual);
-				return ResponseEntity.ok(estadoAtual);
-			}
-			return ResponseEntity.notFound().build();
-		} catch (EntidadeEmUsoException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
-		
-	}
-	
-	@DeleteMapping("/{estadoId}")
-	public ResponseEntity<?> excluir(@PathVariable Long estadoId) {
-		try {
-			estadoService.deleteById(estadoId);
-			return ResponseEntity.noContent().build();
-			
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.notFound().build();
-			
-		} catch (EntidadeEmUsoException e) {
-			
-			return ResponseEntity.status(HttpStatus.CONFLICT)
-					.body(e.getMessage());
-		}
-		
-	}
-	
-	
+    @Autowired
+    private CadastroEstadoService estadoService;
+
+    @GetMapping
+    public List<Estado> listar() {
+        return estadoService.findAll();
+    }
+
+    @GetMapping("/{estadoId}")
+    public ResponseEntity<Estado> buscar(@PathVariable("estadoId") Long estadoId) {
+
+        Estado estado = estadoService.findById(estadoId);
+        if (estado != null) {
+            return ResponseEntity.ok(estado);
+        }
+
+        return ResponseEntity.notFound().build();
+
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping
+    public Estado adicionar(@RequestBody Estado estado) {
+        return estadoService.save(estado);
+    }
+
+    @PutMapping("/{estadoId}")
+    public ResponseEntity<?> atualizar(@PathVariable("estadoId") Long estadoId, @RequestBody Estado estado) {
+        try {
+            Estado estadoAtual = estadoService.findById(estadoId);
+            if (estadoAtual != null) {
+                BeanUtils.copyProperties(estado, estadoAtual, "id");
+                estadoAtual = estadoService.save(estadoAtual);
+                return ResponseEntity.ok(estadoAtual);
+            }
+            return ResponseEntity.notFound().build();
+        } catch (EntidadeEmUsoException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+    }
+
+    @DeleteMapping("/{estadoId}")
+    public ResponseEntity<?> excluir(@PathVariable Long estadoId) {
+        try {
+            estadoService.deleteById(estadoId);
+            return ResponseEntity.noContent().build();
+
+        } catch (EntidadeNaoEncontradaException e) {
+            return ResponseEntity.notFound().build();
+
+        } catch (EntidadeEmUsoException e) {
+
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(e.getMessage());
+        }
+
+    }
+
+
 }
