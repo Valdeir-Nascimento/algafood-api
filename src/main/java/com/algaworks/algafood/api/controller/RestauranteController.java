@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
+import com.algaworks.algafood.domain.repository.RestauranteRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RestController
 @RequestMapping(value = "/restaurantes", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestauranteController {
+
+    @Autowired
+    private RestauranteRepository restauranteRepository;
 
     @Autowired
     private CadastroRestauranteService restauranteService;
@@ -58,19 +62,26 @@ public class RestauranteController {
     }
 
     @PutMapping("/{restauranteId}")
-    public ResponseEntity<?> atualizar(@PathVariable("restauranteId") Long restauranteId, @RequestBody Restaurante restaurante) {
+    public ResponseEntity<?> atualizar(@PathVariable Long restauranteId,
+                                       @RequestBody Restaurante restaurante) {
         try {
-            Restaurante restauranteAtual = restauranteService.findById(restauranteId);
+            Restaurante restauranteAtual = restauranteRepository
+                    .findById(restauranteId).orElse(null);
+
             if (restauranteAtual != null) {
-                BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
+                BeanUtils.copyProperties(restaurante, restauranteAtual,
+                        "id", "formasPagamento", "endereco", "dataCadastro", "produtos");
+
                 restauranteAtual = restauranteService.salvar(restauranteAtual);
                 return ResponseEntity.ok(restauranteAtual);
             }
-            return ResponseEntity.notFound().build();
-        } catch (EntidadeNaoEncontradaException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
 
+            return ResponseEntity.notFound().build();
+
+        } catch (EntidadeNaoEncontradaException e) {
+            return ResponseEntity.badRequest()
+                    .body(e.getMessage());
+        }
     }
 
     @PatchMapping("/{restauranteId}")
