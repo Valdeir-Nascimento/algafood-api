@@ -34,7 +34,7 @@ public class CadastroRestauranteService {
         return restauranteRepository.save(restaurante);
     }
 
-    public List<Restaurante> getRestaurantes() {
+    public List<Restaurante> findAll() {
         return restauranteRepository.findAll();
     }
 
