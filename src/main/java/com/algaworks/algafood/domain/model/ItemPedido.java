@@ -6,38 +6,29 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.List;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Setter
 @Getter
 @Entity
-public class Produto {
+public class ItemPedido {
 
     @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
 
-    @Column(nullable = false)
-    private String nome;
-
-    @Column(nullable = false)
-    private String descricao;
-
-    @Column(nullable = false)
-    private BigDecimal preco;
-
-    @Column(nullable = false)
-    private boolean ativo;
+    private Integer quantidade;
+    private BigDecimal precoUnitario;
+    private BigDecimal precoTotal;
+    private String observacao;
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    private Restaurante restaurante;
+    private Pedido pedido;
 
-    @OneToMany(mappedBy = "produto")
-
-    private List<ItemPedido> itens;
-
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Produto produto;
 
 }
