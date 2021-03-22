@@ -1,6 +1,6 @@
 package com.algaworks.algafood.domain.service;
 
-import com.sun.xml.bind.v2.runtime.reflect.ListTransducedAccessorImpl;
+import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -17,32 +17,33 @@ import java.util.Optional;
 @Service
 public class CadastroEstadoService {
 
+    public static final String MSG_ESTADO_EM_USO = "Estado de código não pode ser removido, pois está em uso";
+
     @Autowired
     private EstadoRepository estadoRepository;
 
-    public Estado save(Estado estado) {
+    public Estado salvar(Estado estado) {
         return estadoRepository.save(estado);
     }
 
-    public Estado findById(Long estadoId) {
-        Optional<Estado> estado = estadoRepository.findById(estadoId);
-        return estado.get();
+    public Estado buscarOuFalhar(Long estadoId) {
+         return estadoRepository.findById(estadoId)
+                                .orElseThrow(() -> new EstadoNaoEncontradoException(estadoId));
+
     }
 
     public List<Estado> findAll() {
         return estadoRepository.findAll();
     }
 
-    public void deleteById(Long estadoId) {
+    public void excluir(Long estadoId) {
         try {
-            estadoRepository.findById(estadoId);
+            estadoRepository.deleteById(estadoId);
         } catch (EmptyResultDataAccessException e) {
-            throw new EntidadeNaoEncontradaException(
-                    String.format("Não existe um cadastro de estado com código %d", estadoId));
-
+            throw new EstadoNaoEncontradoException(estadoId);
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(
-                    String.format("Estado de código %d não pode ser removido, pois está em uso", estadoId));
+                    String.format(MSG_ESTADO_EM_USO, estadoId));
         }
     }
 

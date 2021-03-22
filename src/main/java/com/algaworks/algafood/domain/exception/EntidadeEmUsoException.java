@@ -8,4 +8,5 @@ public class EntidadeEmUsoException extends RuntimeException {
         super(mensagem);
     }
 
+
 }

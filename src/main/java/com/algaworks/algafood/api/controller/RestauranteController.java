@@ -4,6 +4,9 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
+import aj.org.objectweb.asm.TypeReference;
+import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
+import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +29,7 @@ import com.algaworks.algafood.domain.service.CadastroRestauranteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
-@RequestMapping(value = "/restaurantes", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/restaurantes")
 public class RestauranteController {
 
     @Autowired
@@ -42,58 +45,34 @@ public class RestauranteController {
     }
 
     @GetMapping("/{restauranteId}")
-    public ResponseEntity<Restaurante> buscar(@PathVariable("restauranteId") Long restauranteId) {
-        Restaurante restaurante = restauranteService.findById(restauranteId);
-        if (restaurante == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(restaurante);
+    public Restaurante buscar(@PathVariable("restauranteId") Long restauranteId) {
+        return restauranteService.buscarOuFalhar(restauranteId);
     }
 
     @PostMapping
-    public ResponseEntity<?> adicionar(@RequestBody Restaurante restaurante) {
-
+    public Restaurante adicionar(@RequestBody Restaurante restaurante) {
         try {
-            restaurante = restauranteService.salvar(restaurante);
-            return ResponseEntity.status(HttpStatus.CREATED).body(restaurante);
-        } catch (EntidadeNaoEncontradaException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return restauranteService.salvar(restaurante);
+        }catch (CozinhaNaoEncontradaException e) {
+            throw new NegocioException(e.getMessage());
         }
-
     }
 
     @PutMapping("/{restauranteId}")
-    public ResponseEntity<?> atualizar(@PathVariable Long restauranteId,
-                                       @RequestBody Restaurante restaurante) {
+    public Restaurante atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
+        Restaurante restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
+        BeanUtils.copyProperties(restaurante, restauranteAtual,
+                "id", "formasPagamento", "endereco", "dataCadastro", "produtos");
         try {
-            Restaurante restauranteAtual = restauranteRepository
-                    .findById(restauranteId).orElse(null);
-
-            if (restauranteAtual != null) {
-                BeanUtils.copyProperties(restaurante, restauranteAtual,
-                        "id", "formasPagamento", "endereco", "dataCadastro", "produtos");
-
-                restauranteAtual = restauranteService.salvar(restauranteAtual);
-                return ResponseEntity.ok(restauranteAtual);
-            }
-
-            return ResponseEntity.notFound().build();
-
-        } catch (EntidadeNaoEncontradaException e) {
-            return ResponseEntity.badRequest()
-                    .body(e.getMessage());
+            return restauranteService.salvar(restauranteAtual);
+        } catch (CozinhaNaoEncontradaException e) {
+            throw new NegocioException(e.getMessage());
         }
     }
 
     @PatchMapping("/{restauranteId}")
-    public ResponseEntity<?> atualizarParcial(@PathVariable Long restauranteId,
-                                              @RequestBody Map<String, Object> campos) {
-
-        Restaurante restauranteAtual = restauranteService.findById(restauranteId);
-        if (restauranteAtual == null) {
-            return ResponseEntity.notFound().build();
-        }
-
+    public Restaurante atualizarParcial(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos) {
+        Restaurante restauranteAtual= restauranteService.buscarOuFalhar(restauranteId);
         merge(campos, restauranteAtual);
         return atualizar(restauranteId, restauranteAtual);
     }
