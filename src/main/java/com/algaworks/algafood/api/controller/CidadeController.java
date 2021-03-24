@@ -13,6 +13,8 @@ import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.repository.CidadeRepository;
 import com.algaworks.algafood.domain.service.CadastroCidadeService;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/cidades")
 public class CidadeController {
@@ -30,7 +32,7 @@ public class CidadeController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Cidade adicionar(@RequestBody Cidade cidade) {
+    public Cidade adicionar(@RequestBody @Valid Cidade cidade) {
         try {
             return cidadeService.salvar(cidade);
         }catch (EstadoNaoEncontradoException e) {
@@ -45,7 +47,7 @@ public class CidadeController {
 
 
     @PutMapping("/{cidadeId}")
-    public Cidade atualizar(@PathVariable("cidadeId") Long cidadeId, @RequestBody Cidade cidade) {
+    public Cidade atualizar(@PathVariable("cidadeId") Long cidadeId, @RequestBody @Valid Cidade cidade) {
         Cidade cidadeAtual = cidadeService.buscarOuFalhar(cidadeId);
         try {
             BeanUtils.copyProperties(cidade, cidadeAtual, "id");
