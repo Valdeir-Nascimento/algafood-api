@@ -35,6 +35,19 @@ public class CadastroRestauranteService {
         return restauranteRepository.findAll();
     }
 
+    @Transactional
+    public void ativar(Long restauranteId) {
+        //Não precisa chamar o metodo salvar, pois esta instancia esta sendo gerenciado pelo JPA
+        Restaurante restaurante = buscarOuFalhar(restauranteId);
+        restaurante.ativar();
+    }
+
+    @Transactional
+    public void inativar(Long restauranteId) {
+        Restaurante restaurante = buscarOuFalhar(restauranteId);
+        restaurante.inativar();
+    }
+
     public Restaurante buscarOuFalhar(Long id) {
         return restauranteRepository
                 .findById(id)
