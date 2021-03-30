@@ -2,6 +2,10 @@ package com.algaworks.algafood.api.controller;
 
 import java.util.List;
 
+import com.algaworks.algafood.api.assembler.EstadoDTOAssembler;
+import com.algaworks.algafood.api.assembler.EstadoInputDisassembler;
+import com.algaworks.algafood.api.dto.EstadoDTO;
+import com.algaworks.algafood.api.dto.input.EstadoInput;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,28 +30,34 @@ public class EstadoController {
 
     @Autowired
     private CadastroEstadoService estadoService;
+    @Autowired
+    private EstadoDTOAssembler estadoDTOAssembler;
+    @Autowired
+    private EstadoInputDisassembler estadoInputDisassembler;
 
     @GetMapping
-    public List<Estado> listar() {
-        return estadoService.findAll();
+    public List<EstadoDTO> listar() {
+        return estadoDTOAssembler.toCollectionDTO(estadoService.findAll());
     }
 
     @GetMapping("/{estadoId}")
-    public Estado buscar(@PathVariable("estadoId") Long estadoId) {
-        return estadoService.buscarOuFalhar(estadoId);
+    public EstadoDTO buscar(@PathVariable("estadoId") Long estadoId) {
+        return estadoDTOAssembler.toDTO(estadoService.buscarOuFalhar(estadoId));
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Estado adicionar(@RequestBody @Valid Estado estado) {
-        return estadoService.salvar(estado);
+    public EstadoDTO adicionar(@RequestBody @Valid EstadoInput estadoInput) {
+        Estado estado = estadoInputDisassembler.toDomainObject(estadoInput);
+        return estadoDTOAssembler.toDTO(estadoService.salvar(estado));
     }
 
     @PutMapping("/{estadoId}")
-    public Estado atualizar(@PathVariable("estadoId") Long estadoId, @RequestBody @Valid Estado estado) {
+    public EstadoDTO atualizar(@PathVariable("estadoId") Long estadoId, @RequestBody @Valid EstadoInput estadoInput) {
         Estado estadoAtual = estadoService.buscarOuFalhar(estadoId);
-        BeanUtils.copyProperties(estado, estadoAtual, "id");
-        return estadoService.salvar(estadoAtual);
+        estadoInputDisassembler.copyToDomainObject(estadoInput, estadoAtual);
+        estadoAtual = estadoService.salvar(estadoAtual);
+        return estadoDTOAssembler.toDTO(estadoAtual);
     }
 
     @DeleteMapping("/{estadoId}")

@@ -19,13 +19,13 @@ import lombok.Setter;
 @Entity
 public class Estado {
 
-    @NotNull(groups = Groups.EstadoId.class)
+
     @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
 
-    @NotBlank
+
     @Column(nullable = false)
     private String nome;
 }
