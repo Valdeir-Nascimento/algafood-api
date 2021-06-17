@@ -20,6 +20,8 @@ public class CadastroRestauranteService {
     private CadastroCidadeService cidadeService;
     @Autowired
     private CadastroFormaPagamentoService pagamentoService;
+    @Autowired
+    private CadastroUsuarioService usuarioService;
 
 
     @Transactional
@@ -80,6 +82,19 @@ public class CadastroRestauranteService {
         restaurante.fechar();
     }
 
+    @Transactional
+    public void vincularResponsavel(Long restauranteId, Long usuarioId) {
+        Restaurante restaurante = buscarOuFalhar(restauranteId);
+        Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
+        restaurante.adicionarReponsavel(usuario);
+    }
+
+    @Transactional
+    public void desvincularResponsavel(Long restauranteId, Long usuarioId) {
+        Restaurante restaurante = buscarOuFalhar(restauranteId);
+        Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
+        restaurante.removerResponsavel(usuario);
+    }
 
     public Restaurante buscarOuFalhar(Long id) {
         return restauranteRepository

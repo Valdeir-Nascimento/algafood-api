@@ -8,7 +8,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data
@@ -27,7 +29,14 @@ public class Grupo {
     @JoinTable(name = "grupo_permissao",
             joinColumns = @JoinColumn(name = "grupo_id"),
             inverseJoinColumns = @JoinColumn(name = "permissao_id"))
-    private List<Permissao> permisoes = new ArrayList<>();
+    private Set<Permissao> permisoes = new HashSet<>();
 
+    public boolean removerPermissao(Permissao permissao) {
+        return getPermisoes().remove(permissao);
+    }
+
+    public boolean adicionarPermissao(Permissao permissao) {
+        return getPermisoes().add(permissao);
+    }
 
 }

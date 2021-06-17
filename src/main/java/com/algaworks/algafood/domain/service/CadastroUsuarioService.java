@@ -3,6 +3,7 @@ package com.algaworks.algafood.domain.service;
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.exception.UsuarioNaoEncontradoException;
+import com.algaworks.algafood.domain.model.Grupo;
 import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ public class CadastroUsuarioService {
     private EntityManager entityManager;
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private CadastroGrupoService grupoService;
 
     public List<Usuario> listar() {
         return usuarioRepository.findAll();
@@ -32,7 +35,7 @@ public class CadastroUsuarioService {
     public Usuario salvar(Usuario usuario) {
         entityManager.detach(usuario);
         var usuarioExistente = usuarioRepository.findByEmail(usuario.getEmail());
-        if(usuarioExistente.isPresent() && !usuarioExistente.get().equals(usuario)) {
+        if (usuarioExistente.isPresent() && !usuarioExistente.get().equals(usuario)) {
             throw new NegocioException(String.format("Já existe um usuário cadastrado com e-mail %s", usuario.getEmail()));
         }
         return usuarioRepository.save(usuario);
@@ -62,6 +65,20 @@ public class CadastroUsuarioService {
         return usuarioRepository
                 .findById(usuarioId)
                 .orElseThrow(() -> new UsuarioNaoEncontradoException(usuarioId));
+    }
+
+    @Transactional
+    public void desvincularGrupo(Long usuarioId, Long grupoId) {
+        Usuario usuario = buscarOuFalhar(usuarioId);
+        Grupo grupo = grupoService.buscarOuFalhar(grupoId);
+        usuario.removerGrupo(grupo);
+    }
+
+    @Transactional
+    public void vincularGrupo(Long usuarioId, Long grupoId) {
+        Usuario usuario = buscarOuFalhar(usuarioId);
+        Grupo grupo = grupoService.buscarOuFalhar(grupoId);
+        usuario.adicionarGrupo(grupo);
     }
 
 

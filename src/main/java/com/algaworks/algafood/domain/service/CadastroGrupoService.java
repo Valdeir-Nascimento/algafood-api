@@ -3,6 +3,7 @@ package com.algaworks.algafood.domain.service;
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.GrupoNaoEncontradoException;
 import com.algaworks.algafood.domain.model.Grupo;
+import com.algaworks.algafood.domain.model.Permissao;
 import com.algaworks.algafood.domain.repository.GrupoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,6 +19,8 @@ public class CadastroGrupoService {
 
     @Autowired
     private GrupoRepository grupoRepository;
+    @Autowired
+    private CadastroPermissaoService permissaoService;
 
     public List<Grupo> listar() {
         return grupoRepository.findAll();
@@ -38,6 +41,20 @@ public class CadastroGrupoService {
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(MSG_GRUPO_EM_USO);
         }
+    }
+
+    @Transactional
+    public void vincularPermsissao(Long grupoId, Long permissaoId) {
+        Grupo grupo = buscarOuFalhar(grupoId);
+        Permissao permissao = permissaoService.buscarOuFalhar(permissaoId);
+        grupo.adicionarPermissao(permissao);
+    }
+
+    @Transactional
+    public void desvincularPermissao(Long grupoId,Long permissaoId) {
+        Grupo grupo = buscarOuFalhar(grupoId);
+        Permissao permissao = permissaoService.buscarOuFalhar(permissaoId);
+        grupo.removerPermissao(permissao);
     }
 
     public Grupo buscarOuFalhar(Long id) {
