@@ -7,13 +7,12 @@ import java.math.BigDecimal;
 
 @Setter
 @Getter
-public class RestauranteDTO {
+public class ProdutoDTO {
 
     private Long id;
     private String nome;
-    private BigDecimal taxaFrete;
-    private CozinhaDTO cozinha;
+    private String descricao;
+    private BigDecimal preco;
     private Boolean ativo;
-    private EnderecoDTO endereco;
 
 }

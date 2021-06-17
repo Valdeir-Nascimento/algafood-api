@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import javax.persistence.EntityManager;
 import java.util.Optional;
 
+
 public class CustomJpaRepositoryImpl<T, ID> extends SimpleJpaRepository<T, ID>
         implements CustomJpaRepository<T, ID> {
 
@@ -21,9 +22,14 @@ public class CustomJpaRepositoryImpl<T, ID> extends SimpleJpaRepository<T, ID>
     public Optional<T> buscarPrimeiro() {
         var jpql = "from " + getDomainClass().getName();
         T entity = entityManager.createQuery(jpql, getDomainClass())
-            .setMaxResults(1)
-            .getSingleResult();
+                .setMaxResults(1)
+                .getSingleResult();
 
         return Optional.ofNullable(entity);
+    }
+
+    @Override
+    public void detach(T entity) {
+        entityManager.detach(entity);
     }
 }

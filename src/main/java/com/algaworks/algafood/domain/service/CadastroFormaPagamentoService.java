@@ -31,6 +31,7 @@ public class CadastroFormaPagamentoService {
 
     @Transactional
     public void excluir(Long id) {
+
         try {
             formaPagamentoRepository.deleteById(id);
             formaPagamentoRepository.flush();

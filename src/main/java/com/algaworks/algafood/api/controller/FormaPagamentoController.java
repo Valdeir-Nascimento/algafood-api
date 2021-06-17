@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -30,7 +31,7 @@ public class FormaPagamentoController {
     }
 
     @PostMapping
-    public FormaPagamentoDTO adicionar(@RequestBody FormaPagamentoInput formaPagamentoInput) {
+    public FormaPagamentoDTO adicionar(@RequestBody @Valid FormaPagamentoInput formaPagamentoInput) {
         FormaPagamento formaPagamento = formaPagamentoInputDisassembler.toDomainObject(formaPagamentoInput);
         formaPagamento = pagamentoService.salvar(formaPagamento);
         return formaPagamentoDTOAssembler.toDTO(formaPagamento);
@@ -45,7 +46,7 @@ public class FormaPagamentoController {
     @PutMapping("/{formaPagamentoId}")
     public FormaPagamentoDTO atualizar(
             @PathVariable Long formaPagamentoId,
-            @RequestBody FormaPagamentoInput formaPagamentoInput){
+            @RequestBody @Valid FormaPagamentoInput formaPagamentoInput){
         FormaPagamento formaPagamentoAtual = pagamentoService.buscarOuFalhar(formaPagamentoId);
         formaPagamentoInputDisassembler.copyToDomainObject(formaPagamentoInput, formaPagamentoAtual);
         formaPagamentoAtual = pagamentoService.salvar(formaPagamentoAtual);
