@@ -41,7 +41,7 @@ public class CidadeController {
             Cidade cidade = cidadeInputDisassembler.toDomainObject(cidadeInput);
             cidade = cidadeService.salvar(cidade);
             return cidadeDTOAssembler.toDTO(cidade);
-        }catch (EstadoNaoEncontradoException e) {
+        } catch (EstadoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage(), e);
         }
     }
@@ -59,7 +59,7 @@ public class CidadeController {
             cidadeInputDisassembler.copyDomainObject(cidadeInput, cidadeAtual);
             cidadeAtual = cidadeService.salvar(cidadeAtual);
             return cidadeDTOAssembler.toDTO(cidadeAtual);
-        }catch (EstadoNaoEncontradoException e) {
+        } catch (EstadoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage(), e);
         }
     }
