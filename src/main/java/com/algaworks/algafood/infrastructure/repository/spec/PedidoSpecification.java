@@ -16,7 +16,6 @@ public class PedidoSpecification {
             root.fetch("restaurante").fetch("cozinha");
             root.fetch("cliente");
 
-
             var predicates = new ArrayList<Predicate>();
             // adicionar predicates no arrayList
             if (filtro.getClienteId() != null) {

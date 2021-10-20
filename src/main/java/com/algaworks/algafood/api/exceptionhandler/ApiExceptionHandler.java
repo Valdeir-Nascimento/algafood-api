@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -37,24 +38,29 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     public static final String MSG_ERRO_GENERICA_USUARIO_FINAL =
             "Ocorreu um erro interno inesperado no sistema," +
-            " tente novamente mais tarde, " + "e se problema persistir," +
-            " entre em contato com o administrador do sistema.";
-    private static final String MSG_DADOS_INVALIDOS= "Um ou mais campos estão inválidos. " +
+                    " tente novamente mais tarde, " + "e se problema persistir," +
+                    " entre em contato com o administrador do sistema.";
+    private static final String MSG_DADOS_INVALIDOS = "Um ou mais campos estão inválidos. " +
             "Faça o preenchimento correto e tente novamente.";
 
     @Autowired
     private MessageSource messageSource;
 
     @Override
+    protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return handleValidationInternal(ex, ex.getBindingResult(), headers, status, request);
+    }
+
+    @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(
             HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
         Throwable rootCause = ExceptionUtils.getRootCause(ex);
-        if(rootCause instanceof InvalidFormatException) {
+        if (rootCause instanceof InvalidFormatException) {
             return handleInvalidFormat((InvalidFormatException) rootCause, headers, status, request);
-        } else if(rootCause instanceof PropertyBindingException) {
+        } else if (rootCause instanceof PropertyBindingException) {
             return handlePropertyBinding((PropertyBindingException) rootCause, headers, status, request);
-        } else if(rootCause instanceof NoHandlerFoundException) {
+        } else if (rootCause instanceof NoHandlerFoundException) {
             return null;
         }
 
@@ -72,7 +78,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         String path = joinPath(ex.getPath());
 
         String detail = String.format("A propriedade '%s' recebeu o valor '%s', " +
-                "que é do tipo inválido. Corrija e informe um valor compatível com tipo %s.", path,
+                        "que é do tipo inválido. Corrija e informe um valor compatível com tipo %s.", path,
                 ex.getValue(), ex.getTargetType().getSimpleName());
 
         Problem problem = createProblemBuilder(status, problemType, detail)
@@ -120,7 +126,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         ProblemType problemType = ProblemType.PARAMETRO_INVALIDO;
         String detail = String.format("O parâmetro de URL '%s' recebeu o valor '%s', "
-                + "que é de um tipo inválido. Corrija e informe um valor compatível com o tipo %s.",
+                        + "que é de um tipo inválido. Corrija e informe um valor compatível com o tipo %s.",
                 ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName());
 
         Problem problem = createProblemBuilder(status, problemType, detail)
@@ -129,10 +135,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     }
 
-    private ResponseEntity<Object>  handleValidationInternal(
-            Exception ex, BindingResult bindingResult,
-            HttpHeaders headers, HttpStatus status,
+    private ResponseEntity<Object> handleValidationInternal(
+            Exception ex, BindingResult bindingResult, HttpHeaders headers, HttpStatus status,
             WebRequest request) {
+
         ProblemType problemType = ProblemType.DADOS_INVALIDOS;
         String detail = MSG_DADOS_INVALIDOS;
         List<Problem.Field> problemObjects = bindingResult.getAllErrors().stream()
@@ -169,7 +175,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
 
-    @ExceptionHandler({ ValidacaoException.class })
+    @ExceptionHandler({ValidacaoException.class})
     public ResponseEntity<Object> handleValidacaoException(ValidacaoException ex, WebRequest request) {
         return handleValidationInternal(ex, ex.getBindingResult(), new HttpHeaders(),
                 HttpStatus.BAD_REQUEST, request);
@@ -229,7 +235,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
             body = Problem.builder()
                     .timestamp(OffsetDateTime.now())
                     .userMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
-                    .title((String) body )
+                    .title((String) body)
                     .status(status.value())
                     .build();
         }
