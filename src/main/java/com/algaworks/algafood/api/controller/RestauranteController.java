@@ -108,7 +108,7 @@ public class RestauranteController {
     @DeleteMapping("/{restauranteId}/inativo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void inativar(@PathVariable Long restauranteId) {
-    	try {			
+    	try {
     		restauranteService.inativar(restauranteId);
 		} catch (Exception e) {
 			throw new NegocioException(e.getMessage(), e);

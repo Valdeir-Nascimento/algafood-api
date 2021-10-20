@@ -22,7 +22,7 @@ public class CidadeDTOAssembler {
     public List<CidadeDTO> toCollectionDTO(List<Cidade> cidades){
         return cidades
                 .stream()
-                .map(cidade -> toDTO(cidade))
+                .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 }

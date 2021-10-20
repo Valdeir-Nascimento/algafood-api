@@ -11,7 +11,9 @@ import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Pedido;
 import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.repository.PedidoRepository;
+import com.algaworks.algafood.domain.repository.filter.PedidoFilter;
 import com.algaworks.algafood.domain.service.EmissaoPedidoService;
+import com.algaworks.algafood.infrastructure.repository.spec.PedidoSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +24,6 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/pedidos")
 public class PedidoController {
-
 
     @Autowired
     private PedidoRepository pedidoRepository;
@@ -36,28 +37,10 @@ public class PedidoController {
     private PedidoInputDisassembler pedidoInputDisassembler;
 
     @GetMapping
-    public List<PedidoResumoDTO> listar() {
-        List<Pedido> pedidos = pedidoRepository.findAll();
+    public List<PedidoResumoDTO> pesquisar(PedidoFilter filtro) {
+        List<Pedido> pedidos = pedidoRepository.findAll(PedidoSpecification.usandoFiltro(filtro));
         return pedidoResumoDTOAssembler.toCollectionModel(pedidos);
     }
-
-//    @GetMapping
-//    public MappingJacksonValue listar(@RequestParam(required = false) String campos) {
-//        List<Pedido> pedidos = pedidoRepository.findAll();
-//        List<PedidoResumoDTO> pedidoResumoList = pedidoResumoDTOAssembler.toCollectionModel(pedidos);
-//
-//        MappingJacksonValue pedidoWrapper = new MappingJacksonValue(pedidoResumoList);
-//        SimpleFilterProvider filterProvider = new SimpleFilterProvider();
-//        filterProvider.addFilter("pedido-filter", SimpleBeanPropertyFilter.serializeAll());
-//
-//        if (StringUtils.isNotBlank(campos)) {
-//            filterProvider.addFilter("pedido-filter", SimpleBeanPropertyFilter.filterOutAllExcept(campos.split(",")));
-//        }
-//
-//        pedidoWrapper.setFilters(filterProvider);
-//
-//        return pedidoWrapper;
-//    }
 
     @GetMapping("/{codigoPedido}")
     public PedidoResumoDTO buscar(@PathVariable String codigoPedido) {
