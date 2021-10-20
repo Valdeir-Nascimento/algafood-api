@@ -13,27 +13,29 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/restaurantes/{restauranteId}/responsaveis")
 public class RestauranteUsuarioResponsavelController {
-    @Autowired
-    private CadastroRestauranteService restauranteService;
-    @Autowired
-    private UsuarioDTOAssembler usuarioDTOAssembler;
 
-    @GetMapping
-    public List<UsuarioDTO> listar(@PathVariable Long restauranteId) {
-        Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
-        return usuarioDTOAssembler.toCollectionDTO(restaurante.getResponsaveis());
-    }
+	@Autowired
+	private CadastroRestauranteService restauranteService;
 
-    @DeleteMapping("/{usuarioId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void desassociar(@PathVariable Long restauranteId, @PathVariable Long usuarioId) {
-        restauranteService.desvincularResponsavel(restauranteId, usuarioId);
-    }
+	@Autowired
+	private UsuarioDTOAssembler usuarioDTOAssembler;
 
-    @PutMapping("/{usuarioId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void associar(@PathVariable Long restauranteId, @PathVariable Long usuarioId) {
-        restauranteService.vincularResponsavel(restauranteId, usuarioId);
-    }
+	@GetMapping
+	public List<UsuarioDTO> listar(@PathVariable Long restauranteId) {
+		Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
+		return usuarioDTOAssembler.toCollectionDTO(restaurante.getResponsaveis());
+	}
+
+	@DeleteMapping("/{usuarioId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void desassociar(@PathVariable Long restauranteId, @PathVariable Long usuarioId) {
+		restauranteService.desvincularResponsavel(restauranteId, usuarioId);
+	}
+
+	@PutMapping("/{usuarioId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void associar(@PathVariable Long restauranteId, @PathVariable Long usuarioId) {
+		restauranteService.vincularResponsavel(restauranteId, usuarioId);
+	}
 
 }

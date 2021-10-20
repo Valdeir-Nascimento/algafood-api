@@ -30,9 +30,4 @@ public class RestauranteInputDisassembler {
         modelMapper.map(restauranteInput, restaurante);
     }
 
-    public static void main(String[] args) {
-        var nome = "Valdeir";
-        System.out.println(nome);
-    }
-
 }

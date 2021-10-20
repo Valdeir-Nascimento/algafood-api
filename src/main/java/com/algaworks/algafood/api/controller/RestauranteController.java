@@ -1,5 +1,23 @@
 package com.algaworks.algafood.api.controller;
 
+import java.util.List;
+
+import javax.validation.Valid;
+
+import com.algaworks.algafood.api.dto.view.RestauranteView;
+import com.fasterxml.jackson.annotation.JsonView;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.algaworks.algafood.api.assembler.RestauranteDTOAssembler;
 import com.algaworks.algafood.api.assembler.RestauranteInputDisassembler;
 import com.algaworks.algafood.api.dto.RestauranteDTO;
@@ -7,30 +25,27 @@ import com.algaworks.algafood.api.dto.input.RestauranteInput;
 import com.algaworks.algafood.domain.exception.CidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.CozinhaNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
+import com.algaworks.algafood.domain.exception.RestauranteNaoEncontradoException;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.validation.SmartValidator;
-import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/restaurantes")
 public class RestauranteController {
 
-    private final SmartValidator validator;
     @Autowired
     private CadastroRestauranteService restauranteService;
+    
     @Autowired
     private RestauranteDTOAssembler restauranteDTOAssembler;
+    
     @Autowired
     private RestauranteInputDisassembler restauranteInputDisassembler;
 
+    @JsonView(RestauranteView.Resumo.class)
     @GetMapping
     public List<RestauranteDTO> listar() {
         return restauranteDTOAssembler.toCollectionDTO(restauranteService.findAll());
@@ -39,8 +54,7 @@ public class RestauranteController {
     @GetMapping("/{restauranteId}")
     public RestauranteDTO buscar(@PathVariable("restauranteId") Long restauranteId) {
         Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
-        RestauranteDTO restauranteDTO = restauranteDTOAssembler.toDTO(restaurante);
-        return restauranteDTO;
+        return restauranteDTOAssembler.toDTO(restaurante);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -70,11 +84,35 @@ public class RestauranteController {
     public void ativar(@PathVariable Long restauranteId) {
         restauranteService.ativar(restauranteId);
     }
+    
+    @PutMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ativarMultiplos(@RequestBody List<Long> restaurantesIds) {
+        try {
+    	    restauranteService.ativar(restaurantesIds);
+        } catch (RestauranteNaoEncontradoException e) {
+            throw new NegocioException(e.getMessage(), e);
+        }
+    }
+    
+    @DeleteMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void inativarMultiplos(@RequestBody List<Long> restaurantesIds) {
+    	try {			
+    		restauranteService.inativar(restaurantesIds);
+		} catch (RestauranteNaoEncontradoException e) {
+			throw new NegocioException(e.getMessage(), e);
+		}
+    }
 
     @DeleteMapping("/{restauranteId}/inativo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void inativar(@PathVariable Long restauranteId) {
-        restauranteService.inativar(restauranteId);
+    	try {			
+    		restauranteService.inativar(restauranteId);
+		} catch (Exception e) {
+			throw new NegocioException(e.getMessage(), e);
+		}
     }
 
     @PutMapping("/{restauranteId}/abertura")

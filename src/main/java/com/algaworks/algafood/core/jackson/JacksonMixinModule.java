@@ -6,7 +6,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class JacksonMixinModule extends SimpleModule {
 
-    public JacksonMixinModule() {
+	private static final long serialVersionUID = 1L;
+
+	public JacksonMixinModule() {
 
     }
 }

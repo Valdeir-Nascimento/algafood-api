@@ -32,9 +32,14 @@ public class RestauranteProdutoController {
     private ProdutoInputDTODisassembler produtoInputDisassembler;
 
     @GetMapping
-    public List<ProdutoDTO> listar(@PathVariable Long restauranteId) {
+    public List<ProdutoDTO> listar(@RequestParam(required = false) boolean incluirInativos, @PathVariable Long restauranteId) {
         Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
-        List<Produto> produtos = produtoRepository.findByRestaurante(restaurante);
+        List<Produto> produtos;
+        if (incluirInativos) {
+            produtos = produtoRepository.findTodosByRestaurante(restaurante);
+        } else {
+            produtos = produtoRepository.findByAtivosByRestaurante(restaurante);
+        }
         return produtoDTOAssembler.toCollectionDTO(produtos);
     }
 
@@ -54,10 +59,10 @@ public class RestauranteProdutoController {
         produto = produtoService.salvar(produto);
         return produtoDTOAssembler.toDTO(produto);
     }
+
     /**
-     *
      * /restaurantes/{restauranteId}/produtos/produtoId
-     * */
+     */
     @PutMapping("/{produtoId}")
     public ProdutoDTO atualizar(
             @PathVariable Long restauranteId,

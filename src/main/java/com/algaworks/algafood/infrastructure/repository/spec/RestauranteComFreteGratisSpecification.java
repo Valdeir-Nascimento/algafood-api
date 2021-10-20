@@ -11,7 +11,9 @@ import java.math.BigDecimal;
 
 public class RestauranteComFreteGratisSpecification implements Specification<Restaurante> {
 
-    @Override
+	private static final long serialVersionUID = 1L;
+
+	@Override
     public Specification<Restaurante> and(Specification<Restaurante> other) {
         return null;
     }
