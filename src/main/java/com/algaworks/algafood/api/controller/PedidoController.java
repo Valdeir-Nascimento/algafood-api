@@ -6,6 +6,7 @@ import com.algaworks.algafood.api.assembler.PedidoResumoDTOAssembler;
 import com.algaworks.algafood.api.dto.PedidoDTO;
 import com.algaworks.algafood.api.dto.PedidoResumoDTO;
 import com.algaworks.algafood.api.dto.input.PedidoInput;
+import com.algaworks.algafood.core.data.PageableTranslator;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Pedido;
@@ -14,6 +15,7 @@ import com.algaworks.algafood.domain.repository.PedidoRepository;
 import com.algaworks.algafood.domain.repository.filter.PedidoFilter;
 import com.algaworks.algafood.domain.service.EmissaoPedidoService;
 import com.algaworks.algafood.infrastructure.repository.spec.PedidoSpecification;
+import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -42,6 +44,7 @@ public class PedidoController {
 
     @GetMapping
     public Page<PedidoResumoDTO> pesquisar(@PageableDefault(size = 10) Pageable pageable, PedidoFilter filtro) {
+        pageable = traduzirPeageable(pageable);
         Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecification.usandoFiltro(filtro), pageable);
         List<PedidoResumoDTO> pedidos = pedidoResumoDTOAssembler.toCollectionModel(pedidosPage.getContent());
         Page<PedidoResumoDTO> pedidoResumoPage = new PageImpl<>(pedidos, pageable, pedidosPage.getTotalElements());
@@ -69,6 +72,18 @@ public class PedidoController {
         } catch (EntidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage(), e);
         }
+    }
+
+    private Pageable traduzirPeageable(Pageable pageable) {
+        var mapeamento = ImmutableMap.of(
+                "codigo", "codigo",
+                "restaurante.nome", "restaurante.nome",
+                "cliente.nome", "cliente.nome",
+                "valorTotal", "valorTotal"
+
+        );
+
+        return PageableTranslator.translate(pageable, mapeamento);
     }
 
 }

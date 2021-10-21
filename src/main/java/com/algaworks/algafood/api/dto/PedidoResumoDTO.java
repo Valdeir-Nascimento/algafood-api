@@ -19,4 +19,5 @@ public class PedidoResumoDTO {
     private OffsetDateTime dataCriacao;
     private RestauranteResumoDTO restaurante;
     private UsuarioDTO cliente;
+//    private String nomeCliente;
 }
