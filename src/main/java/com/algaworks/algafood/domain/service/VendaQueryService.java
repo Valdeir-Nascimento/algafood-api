@@ -8,5 +8,5 @@ import java.util.List;
 
 @Service
 public interface VendaQueryService {
-    List<VendaDiariaDTO> consultarVendasDiarias(VendaDiariaFilter filtro);
+    List<VendaDiariaDTO> consultarVendasDiarias(VendaDiariaFilter filtro, String timeOffset);
 }
