@@ -25,7 +25,7 @@ public class RestauranteProdutoFotoController {
     @Autowired
     private CadastroProdutoService produtoService;
     @Autowired
-    FotoProdutoDTOAssembler fotoProdutoDTOAssembler;
+    private FotoProdutoDTOAssembler fotoProdutoDTOAssembler;
 
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public FotoProdutoDTO autualizarFoto(
