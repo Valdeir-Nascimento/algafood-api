@@ -23,10 +23,12 @@ public class CatalogoFotoProdutoService {
 
     @Transactional
     public FotoProduto salvar(FotoProduto foto, InputStream dadosArquivo) {
-        //excluir foto, se existir
         String novoNomeArquivo = fotoStorageService.gerarNomeArquivo(foto.getNomeArquivo());
+        String nomeArquivoExistente = null;
+
         Optional<FotoProduto> fotoExistente = produtoRepository.findFotoById(foto.getRestauranteId(), foto.getProduto().getId());
         if (fotoExistente.isPresent()) {
+            nomeArquivoExistente = fotoExistente.get().getNomeArquivo();
             produtoRepository.delete(fotoExistente.get());
         }
 
@@ -39,7 +41,9 @@ public class CatalogoFotoProdutoService {
                 .inputStream(dadosArquivo)
                 .build();
 
-        fotoStorageService.armazenar(novaFoto);
+
+        fotoStorageService.substituir(nomeArquivoExistente, novaFoto);
+
         return foto;
     }
 
