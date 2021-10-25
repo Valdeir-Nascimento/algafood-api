@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/restaurantes/{restauranteId}/produtos/{produtoId}/foto")
@@ -31,7 +32,7 @@ public class RestauranteProdutoFotoController {
     public FotoProdutoDTO autualizarFoto(
             @PathVariable Long restauranteId,
             @PathVariable Long produtoId,
-            @Valid FotoProdutoInput fotoProdutoInput) {
+            @Valid FotoProdutoInput fotoProdutoInput) throws IOException {
 
         Produto produto = produtoService.buscarOuFalhar(restauranteId, produtoId);
         FotoProduto foto = new FotoProduto();
@@ -41,7 +42,7 @@ public class RestauranteProdutoFotoController {
         foto.setTamanho(fotoProdutoInput.getArquivo().getSize());
         foto.setNomeArquivo(fotoProdutoInput.getArquivo().getName());
 
-        FotoProduto fotoSalva = catalogoFotoProdutoService.salvar(foto);
+        FotoProduto fotoSalva = catalogoFotoProdutoService.salvar(foto, fotoProdutoInput.getArquivo().getInputStream());
         return fotoProdutoDTOAssembler.toDTO(fotoSalva);
     }
 
