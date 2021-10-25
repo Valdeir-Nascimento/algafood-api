@@ -9,9 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;
 import java.util.Optional;
-import java.util.UUID;
 
-import static com.algaworks.algafood.domain.service.FotoStorageService.*;
+import static com.algaworks.algafood.domain.service.FotoStorageService.NovaFoto;
 
 
 @Service
@@ -53,6 +52,14 @@ public class CatalogoFotoProdutoService {
                 .findFotoById(restauranteId, produtoId)
                 .orElseThrow(() -> new FotoProdutoNaoEncontradaException(restauranteId, produtoId));
 
+    }
+
+    @Transactional
+    public void excluir(Long restauranteId, Long produtoId) {
+        FotoProduto fotoProduto = buscarOuFalhar(restauranteId, produtoId);
+        produtoRepository.delete(fotoProduto);
+        produtoRepository.flush();
+        fotoStorageService.remover(fotoProduto.getNomeArquivo());
     }
 
 }
