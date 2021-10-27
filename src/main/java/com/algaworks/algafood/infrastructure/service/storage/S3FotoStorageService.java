@@ -1,5 +1,6 @@
 package com.algaworks.algafood.infrastructure.service.storage;
 
+import com.algaworks.algafood.api.dto.FotoRecuperadaDTO;
 import com.algaworks.algafood.core.storage.StorageProperties;
 import com.algaworks.algafood.domain.service.FotoStorageService;
 import com.amazonaws.services.s3.AmazonS3;
@@ -11,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.io.InputStream;
+import java.net.URL;
 
 @Qualifier("storageNuvem")
 @Service
@@ -54,8 +55,10 @@ public class S3FotoStorageService implements FotoStorageService {
     }
 
     @Override
-    public InputStream recuperar(String nomeArquivo) {
-        return null;
+    public FotoRecuperadaDTO recuperar(String nomeArquivo) {
+        String caminhoArquivo = getCaminho(nomeArquivo);
+        URL url = amazonS3.getUrl(storageProperties.getS3().getBucket(), caminhoArquivo);
+        return FotoRecuperadaDTO.builder().url(url.toString()).build();
     }
 
     private String getCaminho(String nomeArquivo) {

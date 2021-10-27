@@ -1,5 +1,6 @@
 package com.algaworks.algafood.domain.service;
 
+import com.algaworks.algafood.api.dto.FotoRecuperadaDTO;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,7 +13,7 @@ public interface FotoStorageService {
 
     void remover(String nomeArquivo);
 
-    InputStream recuperar(String nomeArquivo);
+    FotoRecuperadaDTO recuperar(String nomeArquivo);
 
     default void substituir(String nomeArquivoAntigo, NovaFoto novaFoto) {
         this.armazenar(novaFoto);
@@ -32,4 +33,5 @@ public interface FotoStorageService {
         private InputStream inputStream;
         private String contentType;
     }
+
 }
