@@ -10,6 +10,7 @@ import com.algaworks.algafood.domain.service.CadastroProdutoService;
 import com.algaworks.algafood.domain.service.CatalogoFotoProdutoService;
 import com.algaworks.algafood.domain.service.FotoStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,6 +33,8 @@ public class RestauranteProdutoFotoController {
     private CadastroProdutoService produtoService;
     @Autowired
     private FotoProdutoDTOAssembler fotoProdutoDTOAssembler;
+
+    @Qualifier("storageNuvem")
     @Autowired
     private FotoStorageService fotoStorageService;
 

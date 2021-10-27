@@ -4,6 +4,7 @@ import com.algaworks.algafood.domain.exception.FotoProdutoNaoEncontradaException
 import com.algaworks.algafood.domain.model.FotoProduto;
 import com.algaworks.algafood.domain.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,12 +13,13 @@ import java.util.Optional;
 
 import static com.algaworks.algafood.domain.service.FotoStorageService.NovaFoto;
 
-
 @Service
 public class CatalogoFotoProdutoService {
 
     @Autowired
     private ProdutoRepository produtoRepository;
+
+    @Qualifier("storageNuvem")
     @Autowired
     private FotoStorageService fotoStorageService;
 
@@ -38,6 +40,7 @@ public class CatalogoFotoProdutoService {
 
         NovaFoto novaFoto = NovaFoto.builder()
                 .nomeArquivo(foto.getNomeArquivo())
+                .contentType(foto.getContentType())
                 .inputStream(dadosArquivo)
                 .build();
 

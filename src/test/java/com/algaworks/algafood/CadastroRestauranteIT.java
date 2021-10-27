@@ -9,8 +9,8 @@ import com.algaworks.algafood.util.ResourceUtil;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -46,7 +46,8 @@ public class CadastroRestauranteIT {
 
     private Restaurante burgerTopRestaurante;
 
-    @BeforeEach
+//    @BeforeEach
+    @Before
     public void setup() {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         RestAssured.port = port;

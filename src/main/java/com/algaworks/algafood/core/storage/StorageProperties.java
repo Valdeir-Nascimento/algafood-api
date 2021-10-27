@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties("algafood.storage")
 public class StorageProperties {
+
     private Local local = new Local();
     private S3 s3 = new S3();
 
