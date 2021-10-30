@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Singular;
 
+import java.util.Map;
 import java.util.Set;
 
 @Builder
@@ -17,5 +18,7 @@ public class MensagemDTO {
     private String assunto;
     @NonNull
     private String corpo;
+    @Singular("variavel")
+    private Map<String, Object> variaveis;
 
 }
