@@ -1,5 +1,6 @@
 package com.algaworks.algafood.core.email;
 
+import com.algaworks.algafood.api.dto.SandboxDTO;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -20,8 +21,10 @@ public class EmailProperties {
 
     private Implementacao impl = Implementacao.FAKE;
 
+    private SandboxDTO sandbox = new SandboxDTO();
+
     public enum Implementacao {
-        SMTP, FAKE
+        SMTP, FAKE, SANDBOX
     }
 
 }
