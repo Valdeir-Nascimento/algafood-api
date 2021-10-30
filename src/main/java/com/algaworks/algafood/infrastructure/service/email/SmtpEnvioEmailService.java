@@ -41,7 +41,7 @@ public class SmtpEnvioEmailService implements EnvioEmailService {
         }
     }
 
-    private String processarTemplate(MensagemDTO mensagemDTO) {
+    public String processarTemplate(MensagemDTO mensagemDTO) {
         try {
             Template template = freemarkerConfig.getTemplate(mensagemDTO.getCorpo());
             return FreeMarkerTemplateUtils.processTemplateIntoString(template, mensagemDTO.getVariaveis());
