@@ -27,7 +27,6 @@ public class SmtpEnvioEmailService implements EnvioEmailService {
     @Override
     public void enviar(MensagemDTO mensagem) {
         try {
-            String corpo = processarTemplate(mensagem);
             MimeMessage mimeMessage = criarMimeMessage(mensagem);
             mailSender.send(mimeMessage);
         } catch (Exception e) {
