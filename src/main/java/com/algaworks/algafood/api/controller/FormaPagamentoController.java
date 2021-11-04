@@ -7,11 +7,14 @@ import com.algaworks.algafood.api.dto.input.FormaPagamentoInput;
 import com.algaworks.algafood.domain.model.FormaPagamento;
 import com.algaworks.algafood.domain.service.CadastroFormaPagamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(value = "/formas-pagamento")
@@ -38,9 +41,11 @@ public class FormaPagamentoController {
     }
 
     @GetMapping("/{formaPagamentoId}")
-    public FormaPagamentoDTO buscar(@PathVariable Long formaPagamentoId) {
+    public ResponseEntity<FormaPagamentoDTO> buscar(@PathVariable Long formaPagamentoId) {
         FormaPagamento formaPagamento = pagamentoService.buscarOuFalhar(formaPagamentoId);
-        return formaPagamentoDTOAssembler.toDTO(formaPagamento);
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(formaPagamentoDTOAssembler.toDTO(formaPagamento));
     }
 
     @PutMapping("/{formaPagamentoId}")
