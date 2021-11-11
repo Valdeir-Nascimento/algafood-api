@@ -1,5 +1,7 @@
 package com.algaworks.algafood.core.openapi;
 
+import com.algaworks.algafood.api.exceptionhandler.Problem;
+import com.fasterxml.classmate.TypeResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -29,10 +31,13 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 
     @Bean
     public Docket apiDocket() {
+
+        TypeResolver typeResolver = new TypeResolver();
+
+
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                     .apis(RequestHandlerSelectors.basePackage("com.algaworks.algafood.api"))
-                    //.paths(PathSelectors.ant("/restaurantes/*"))
                     .build()
                     .apiInfo(apiInfo())
                     .useDefaultResponseMessages(false)
@@ -40,6 +45,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                     .globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessage())
                     .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
                     .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessage())
+                    .additionalModels(typeResolver.resolve(Problem.class))
                     .tags(new Tag("Cidades", "Gerencia as cidades"));
     }
 
