@@ -1,10 +1,12 @@
 package com.algaworks.algafood.core.openapi;
 
+import com.algaworks.algafood.api.controller.swagger.PageableDTOSwagger;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import com.fasterxml.classmate.TypeResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -46,6 +48,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                     .globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessage())
                     .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
                     .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessage())
+                    .directModelSubstitute(Pageable.class, PageableDTOSwagger.class)
                     .additionalModels(typeResolver.resolve(Problem.class))
                     .tags(new Tag("Cidades", "Gerencia as cidades"),
                             new Tag("Grupos", "Gerencia os grupos de usuários"));
