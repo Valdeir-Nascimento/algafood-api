@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.assembler.CozinhaDTOAssembler;
 import com.algaworks.algafood.api.assembler.CozinhaInputDisassembler;
+import com.algaworks.algafood.api.controller.swagger.CozinhaControllerSwagger;
 import com.algaworks.algafood.api.dto.CozinhaDTO;
 import com.algaworks.algafood.api.dto.input.CozinhaInput;
 import com.algaworks.algafood.domain.model.Cozinha;
@@ -13,14 +14,15 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/cozinhas")
-public class CozinhaController {
+@RequestMapping(value = "/cozinhas", produces = MediaType.APPLICATION_JSON_VALUE)
+public class CozinhaController implements CozinhaControllerSwagger {
 
     @Autowired
     private CozinhaRepository cozinhaRepository;
@@ -41,7 +43,7 @@ public class CozinhaController {
 
     @GetMapping("/{cozinhaId}")
     public CozinhaDTO buscar(@PathVariable Long cozinhaId) {
-       return cozinhaDTOAssembler.toDTO(cozinhaService.buscarOuFalhar(cozinhaId));
+        return cozinhaDTOAssembler.toDTO(cozinhaService.buscarOuFalhar(cozinhaId));
     }
 
     @PostMapping
@@ -65,7 +67,7 @@ public class CozinhaController {
 
     @DeleteMapping("/{cozinhaId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable("cozinhaId") Long cozinhaId) {
+    public void remover(@PathVariable("cozinhaId") Long cozinhaId) {
         cozinhaService.excluir(cozinhaId);
     }
 }
