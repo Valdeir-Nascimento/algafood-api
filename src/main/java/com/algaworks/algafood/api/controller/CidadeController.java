@@ -2,15 +2,14 @@ package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.assembler.CidadeDTOAssembler;
 import com.algaworks.algafood.api.assembler.CidadeInputDisassembler;
+import com.algaworks.algafood.api.controller.swagger.CidadeControllerSwagger;
 import com.algaworks.algafood.api.dto.CidadeDTO;
 import com.algaworks.algafood.api.dto.input.CidadeInput;
-import com.algaworks.algafood.api.exceptionhandler.Problem;
 import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.repository.CidadeRepository;
 import com.algaworks.algafood.domain.service.CadastroCidadeService;
-import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +17,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@Api(tags = "Cidades")
+
 @RestController
 @RequestMapping("/cidades")
-public class CidadeController {
+public class CidadeController implements CidadeControllerSwagger {
 
     @Autowired
     private CadastroCidadeService cidadeService;
@@ -32,16 +31,13 @@ public class CidadeController {
     @Autowired
     private CidadeInputDisassembler cidadeInputDisassembler;
 
-    @ApiOperation("Lista as cidades")
     @GetMapping
     public List<CidadeDTO> listar() {
         return cidadeDTOAssembler.toCollectionDTO(cidadeRepository.findAll());
     }
 
-    @ApiOperation("Cadastra uma cidade")
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public CidadeDTO adicionar(@ApiParam(name = "corpo", value = "Representação de uma nova cidade") @RequestBody @Valid CidadeInput cidadeInput) {
+    public CidadeDTO adicionar(@RequestBody @Valid CidadeInput cidadeInput) {
         try {
             Cidade cidade = cidadeInputDisassembler.toDomainObject(cidadeInput);
             cidade = cidadeService.salvar(cidade);
@@ -51,25 +47,14 @@ public class CidadeController {
         }
     }
 
-    @ApiOperation("Busca uma cidade por ID")
-    @ApiResponses({
-            @ApiResponse(code = 400, message = "ID da cidade inválido", response = Problem.class),
-            @ApiResponse(code = 404, message = "Cidade não encontrada", response = Problem.class),
-    })
     @GetMapping("/{cidadeId}")
-    public CidadeDTO buscar(@ApiParam(value = "ID de uma cidade", example = "1") @PathVariable("cidadeId") Long cidadeId) {
+    public CidadeDTO buscar(@PathVariable("cidadeId") Long cidadeId) {
         return cidadeDTOAssembler.toDTO(cidadeService.buscarOuFalhar(cidadeId));
     }
 
-    @ApiOperation("Atualiza uma cidade por ID")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Cidade atualizada", response = Problem.class),
-            @ApiResponse(code = 404, message = "Cidade não encontrada", response = Problem.class),
-    })
     @PutMapping("/{cidadeId}")
     public CidadeDTO atualizar(
             @PathVariable("cidadeId") Long cidadeId,
-            @ApiParam(name = "corpo", value = "ID de uma cidade", example = "1")
             @RequestBody @Valid CidadeInput cidadeInput) {
         Cidade cidadeAtual = cidadeService.buscarOuFalhar(cidadeId);
         try {
@@ -81,12 +66,9 @@ public class CidadeController {
         }
     }
 
-    @ApiOperation("Exclui uma cidade por ID")
     @DeleteMapping("/{cidadeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void remover(
-            @ApiParam(name = "corpo", value = "ID de uma cidade", example = "1")
-            @PathVariable Long cidadeId) {
+    public void remover(@PathVariable Long cidadeId) {
         cidadeService.excluir(cidadeId);
     }
 
