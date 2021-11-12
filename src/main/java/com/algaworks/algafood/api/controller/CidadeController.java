@@ -4,14 +4,13 @@ import com.algaworks.algafood.api.assembler.CidadeDTOAssembler;
 import com.algaworks.algafood.api.assembler.CidadeInputDisassembler;
 import com.algaworks.algafood.api.dto.CidadeDTO;
 import com.algaworks.algafood.api.dto.input.CidadeInput;
+import com.algaworks.algafood.api.exceptionhandler.Problem;
 import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.repository.CidadeRepository;
 import com.algaworks.algafood.domain.service.CadastroCidadeService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -53,12 +52,20 @@ public class CidadeController {
     }
 
     @ApiOperation("Busca uma cidade por ID")
+    @ApiResponses({
+            @ApiResponse(code = 400, message = "ID da cidade inválido", response = Problem.class),
+            @ApiResponse(code = 404, message = "Cidade não encontrada", response = Problem.class),
+    })
     @GetMapping("/{cidadeId}")
     public CidadeDTO buscar(@ApiParam(value = "ID de uma cidade", example = "1") @PathVariable("cidadeId") Long cidadeId) {
         return cidadeDTOAssembler.toDTO(cidadeService.buscarOuFalhar(cidadeId));
     }
 
     @ApiOperation("Atualiza uma cidade por ID")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Cidade atualizada", response = Problem.class),
+            @ApiResponse(code = 404, message = "Cidade não encontrada", response = Problem.class),
+    })
     @PutMapping("/{cidadeId}")
     public CidadeDTO atualizar(
             @PathVariable("cidadeId") Long cidadeId,
