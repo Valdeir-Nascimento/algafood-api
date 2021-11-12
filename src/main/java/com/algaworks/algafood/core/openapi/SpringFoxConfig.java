@@ -1,11 +1,14 @@
 package com.algaworks.algafood.core.openapi;
 
 import com.algaworks.algafood.api.controller.swagger.PageableDTOSwagger;
+import com.algaworks.algafood.api.dto.CozinhaDTO;
+import com.algaworks.algafood.api.dto.swagger.CozinhasDTOSwagger;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import com.fasterxml.classmate.TypeResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,6 +18,7 @@ import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
+import springfox.documentation.schema.AlternateTypeRules;
 import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
@@ -34,9 +38,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 
     @Bean
     public Docket apiDocket() {
-
         TypeResolver typeResolver = new TypeResolver();
-
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
@@ -49,6 +51,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                     .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
                     .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessage())
                     .directModelSubstitute(Pageable.class, PageableDTOSwagger.class)
+                    .alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(Page.class, CozinhaDTO.class), CozinhasDTOSwagger.class))
                     .additionalModels(typeResolver.resolve(Problem.class))
                     .tags(new Tag("Cidades", "Gerencia as cidades"),
                             new Tag("Grupos", "Gerencia os grupos de usuários"));
