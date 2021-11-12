@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.assembler.GrupoDTOAssembler;
 import com.algaworks.algafood.api.assembler.GrupoDTODisassembler;
+import com.algaworks.algafood.api.controller.swagger.GrupoControllerSwagger;
 import com.algaworks.algafood.api.dto.GrupoDTO;
 import com.algaworks.algafood.api.dto.input.GrupoInput;
 import com.algaworks.algafood.domain.model.Grupo;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/grupos")
-public class GrupoController {
+public class GrupoController implements GrupoControllerSwagger {
 
     @Autowired
     private CadastroGrupoService grupoService;
