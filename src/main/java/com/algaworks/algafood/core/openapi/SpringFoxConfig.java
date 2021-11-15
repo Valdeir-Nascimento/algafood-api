@@ -56,8 +56,10 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                     .additionalModels(typeResolver.resolve(Problem.class))
                     .ignoredParameterTypes(ServletWebRequest.class)
                     .tags(new Tag("Cidades", "Gerencia as cidades"),
-                        new Tag("Grupos", "Gerencia os grupos de usuários"),
-                        new Tag("Cozinhas", "Gerencia as cozinhas"));
+                            new Tag("Grupos", "Gerencia os grupos de usuários"),
+                            new Tag("Cozinhas", "Gerencia as cozinhas"),
+                            new Tag("Formas de pagamento", "Gerencia as formas de pagamento")
+                        );
     }
 
     private List<ResponseMessage> globalGetResponseMessage() {

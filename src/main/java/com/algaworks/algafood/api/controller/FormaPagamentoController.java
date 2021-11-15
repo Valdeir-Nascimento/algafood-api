@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.assembler.FormaPagamentoDTOAssembler;
 import com.algaworks.algafood.api.assembler.FormaPagamentoInputDisassembler;
+import com.algaworks.algafood.api.controller.swagger.FormaPagamentoControllerSwagger;
 import com.algaworks.algafood.api.dto.FormaPagamentoDTO;
 import com.algaworks.algafood.api.dto.input.FormaPagamentoInput;
 import com.algaworks.algafood.domain.model.FormaPagamento;
@@ -10,6 +11,7 @@ import com.algaworks.algafood.domain.service.CadastroFormaPagamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -21,8 +23,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @RestController
-@RequestMapping(value = "/formas-pagamento")
-public class FormaPagamentoController {
+@RequestMapping(value = "/formas-pagamento",  produces = MediaType.APPLICATION_JSON_VALUE)
+public class FormaPagamentoController implements FormaPagamentoControllerSwagger {
 
     @Autowired
     private CadastroFormaPagamentoService pagamentoService;
@@ -94,7 +96,7 @@ public class FormaPagamentoController {
 
     @DeleteMapping("/{formaPagamentoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void excluir(@PathVariable Long formaPagamentoId) {
+    public void remover(@PathVariable Long formaPagamentoId) {
         pagamentoService.excluir(formaPagamentoId);
     }
 
