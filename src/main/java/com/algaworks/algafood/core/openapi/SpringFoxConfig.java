@@ -17,6 +17,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.schema.AlternateTypeRules;
@@ -43,75 +44,82 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                    .apis(RequestHandlerSelectors.basePackage("com.algaworks.algafood.api"))
-                    .build()
-                    .apiInfo(apiInfo())
-                    .useDefaultResponseMessages(false)
-                    .globalResponseMessage(RequestMethod.GET, globalGetResponseMessage())
-                    .globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessage())
-                    .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
-                    .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessage())
-                    .directModelSubstitute(Pageable.class, PageableDTOSwagger.class)
-                    .alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(Page.class, CozinhaDTO.class), CozinhasDTOSwagger.class))
-                    .additionalModels(typeResolver.resolve(Problem.class))
-                    .ignoredParameterTypes(ServletWebRequest.class)
-                    .tags(new Tag("Cidades", "Gerencia as cidades"),
-                            new Tag("Grupos", "Gerencia os grupos de usuários"),
-                            new Tag("Cozinhas", "Gerencia as cozinhas"),
-                            new Tag("Formas de pagamento", "Gerencia as formas de pagamento")
-                        );
+                .apis(RequestHandlerSelectors.basePackage("com.algaworks.algafood.api"))
+                .build()
+                .apiInfo(apiInfo())
+                .useDefaultResponseMessages(false)
+                .globalResponseMessage(RequestMethod.GET, globalGetResponseMessage())
+                .globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessage())
+                .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
+                .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessage())
+                .globalOperationParameters(Arrays.asList(
+                        new ParameterBuilder()
+                                .name("campos")
+                                .description("Nomes das propriedades para filtrar na resposta, separados por vírgula")
+                                .parameterType("query")
+                                .modelRef(new ModelRef("string"))
+                                .build()))
+                .directModelSubstitute(Pageable.class, PageableDTOSwagger.class)
+                .alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(Page.class, CozinhaDTO.class), CozinhasDTOSwagger.class))
+                .additionalModels(typeResolver.resolve(Problem.class))
+                .ignoredParameterTypes(ServletWebRequest.class)
+                .tags(new Tag("Cidades", "Gerencia as cidades"),
+                        new Tag("Grupos", "Gerencia os grupos de usuários"),
+                        new Tag("Cozinhas", "Gerencia as cozinhas"),
+                        new Tag("Formas de pagamento", "Gerencia as formas de pagamento")
+                );
     }
 
     private List<ResponseMessage> globalGetResponseMessage() {
         return Arrays.asList(
                 new ResponseMessageBuilder()
-                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                    .message("Erro interno do servidor")
-                    .responseModel(new ModelRef("Problema"))
-                    .build(),
+                        .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                        .message("Erro interno do servidor")
+                        .responseModel(new ModelRef("Problema"))
+                        .build(),
                 new ResponseMessageBuilder()
-                    .code(HttpStatus.NOT_ACCEPTABLE.value())
-                    .message("Recurso não possui representação que poderia ser aceita pelo consumidor")
-                    .build()
+                        .code(HttpStatus.NOT_ACCEPTABLE.value())
+                        .message("Recurso não possui representação que poderia ser aceita pelo consumidor")
+                        .build()
         );
     }
 
     private List<ResponseMessage> globalPostPutResponseMessage() {
         return Arrays.asList(
                 new ResponseMessageBuilder()
-                    .code(HttpStatus.BAD_REQUEST.value())
-                    .message("Requisição inválida (erro do cliente)")
-                    .responseModel(new ModelRef("Problema"))
-                    .build(),
+                        .code(HttpStatus.BAD_REQUEST.value())
+                        .message("Requisição inválida (erro do cliente)")
+                        .responseModel(new ModelRef("Problema"))
+                        .build(),
                 new ResponseMessageBuilder()
-                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                    .message("Erro interno do servidor")
-                    .responseModel(new ModelRef("Problema"))
-                    .build(),
+                        .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                        .message("Erro interno do servidor")
+                        .responseModel(new ModelRef("Problema"))
+                        .build(),
                 new ResponseMessageBuilder()
-                    .code(HttpStatus.NOT_ACCEPTABLE.value())
-                    .message("Recurso não possui representação que poderia ser aceita pelo consumidor")
-                    .build(),
+                        .code(HttpStatus.NOT_ACCEPTABLE.value())
+                        .message("Recurso não possui representação que poderia ser aceita pelo consumidor")
+                        .build(),
                 new ResponseMessageBuilder()
-                    .code(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value())
-                    .message("Requisição recusada porque o corpo está em um formato não suportado")
-                    .responseModel(new ModelRef("Problema"))
-                    .build()
+                        .code(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value())
+                        .message("Requisição recusada porque o corpo está em um formato não suportado")
+                        .responseModel(new ModelRef("Problema"))
+                        .build()
         );
     }
 
     private List<ResponseMessage> globalDeleteResponseMessages() {
         return Arrays.asList(
                 new ResponseMessageBuilder()
-                    .code(HttpStatus.BAD_REQUEST.value())
-                    .message("Requisição inválida (erro do cliente)")
-                    .responseModel(new ModelRef("Problema"))
-                    .build(),
+                        .code(HttpStatus.BAD_REQUEST.value())
+                        .message("Requisição inválida (erro do cliente)")
+                        .responseModel(new ModelRef("Problema"))
+                        .build(),
                 new ResponseMessageBuilder()
-                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                    .message("Erro interno no servidor")
-                    .responseModel(new ModelRef("Problema"))
-                    .build()
+                        .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                        .message("Erro interno no servidor")
+                        .responseModel(new ModelRef("Problema"))
+                        .build()
         );
     }
 
@@ -127,9 +135,9 @@ public class SpringFoxConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("swagger-ui.html")
-            .addResourceLocations("classpath:/META-INF/resources/");
+                .addResourceLocations("classpath:/META-INF/resources/");
 
         registry.addResourceHandler("/webjars/**")
-             .addResourceLocations("classpath:/META-INF/resources/webjars/");
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 }
