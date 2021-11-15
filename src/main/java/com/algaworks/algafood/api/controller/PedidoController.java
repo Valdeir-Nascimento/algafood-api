@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.controller;
 import com.algaworks.algafood.api.assembler.PedidoDTOAssembler;
 import com.algaworks.algafood.api.assembler.PedidoInputDisassembler;
 import com.algaworks.algafood.api.assembler.PedidoResumoDTOAssembler;
+import com.algaworks.algafood.api.controller.swagger.PedidoControllerSwagger;
 import com.algaworks.algafood.api.dto.PedidoDTO;
 import com.algaworks.algafood.api.dto.PedidoResumoDTO;
 import com.algaworks.algafood.api.dto.input.PedidoInput;
@@ -24,14 +25,15 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/pedidos")
-public class PedidoController {
+@RequestMapping(value = "/pedidos", produces = MediaType.APPLICATION_JSON_VALUE)
+public class PedidoController implements PedidoControllerSwagger {
 
     @Autowired
     private PedidoRepository pedidoRepository;
@@ -44,10 +46,7 @@ public class PedidoController {
     @Autowired
     private PedidoInputDisassembler pedidoInputDisassembler;
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula",
-                    name = "campos", paramType = "query", type = "string")
-    })
+
     @GetMapping
     public Page<PedidoResumoDTO> pesquisar(@PageableDefault(size = 10) Pageable pageable, PedidoFilter filtro) {
         pageable = traduzirPeageable(pageable);
@@ -57,10 +56,7 @@ public class PedidoController {
         return pedidoResumoPage;
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(value = "Nomes das propriedades para filtrar na resposta, separados por vírgula",
-                    name = "campos", paramType = "query", type = "string")
-    })
+
     @GetMapping("/{codigoPedido}")
     public PedidoResumoDTO buscar(@PathVariable String codigoPedido) {
         Pedido pedido = emissaoPedidoService.buscarOuFalhar(codigoPedido);

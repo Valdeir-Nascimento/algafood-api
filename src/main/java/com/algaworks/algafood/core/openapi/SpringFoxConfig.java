@@ -2,7 +2,9 @@ package com.algaworks.algafood.core.openapi;
 
 import com.algaworks.algafood.api.controller.swagger.PageableDTOSwagger;
 import com.algaworks.algafood.api.dto.CozinhaDTO;
+import com.algaworks.algafood.api.dto.PedidoResumoDTO;
 import com.algaworks.algafood.api.dto.swagger.CozinhasDTOSwagger;
+import com.algaworks.algafood.api.dto.swagger.PedidoResumoDTOSwagger;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import com.fasterxml.classmate.TypeResolver;
 import org.springframework.context.annotation.Bean;
@@ -52,21 +54,19 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 .globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessage())
                 .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
                 .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessage())
-//                .globalOperationParameters(Arrays.asList(
-//                        new ParameterBuilder()
-//                                .name("campos")
-//                                .description("Nomes das propriedades para filtrar na resposta, separados por vírgula")
-//                                .parameterType("query")
-//                                .modelRef(new ModelRef("string"))
-//                                .build()))
                 .directModelSubstitute(Pageable.class, PageableDTOSwagger.class)
                 .alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(Page.class, CozinhaDTO.class), CozinhasDTOSwagger.class))
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(Page.class, PedidoResumoDTO.class),
+                        PedidoResumoDTOSwagger.class))
                 .additionalModels(typeResolver.resolve(Problem.class))
                 .ignoredParameterTypes(ServletWebRequest.class)
+
                 .tags(new Tag("Cidades", "Gerencia as cidades"),
                         new Tag("Grupos", "Gerencia os grupos de usuários"),
                         new Tag("Cozinhas", "Gerencia as cozinhas"),
-                        new Tag("Formas de pagamento", "Gerencia as formas de pagamento")
+                        new Tag("Formas de pagamento", "Gerencia as formas de pagamento"),
+                        new Tag("Pedidos", "Gerencia os pedidos")
                 );
     }
 
