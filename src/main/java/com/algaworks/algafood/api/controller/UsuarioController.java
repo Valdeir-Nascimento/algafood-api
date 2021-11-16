@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.assembler.UsuarioDTOAssembler;
 import com.algaworks.algafood.api.assembler.UsuarioDTODisassembler;
+import com.algaworks.algafood.api.controller.swagger.UsuarioControllerSwagger;
 import com.algaworks.algafood.api.dto.UsuarioDTO;
 import com.algaworks.algafood.api.dto.input.SenhaInput;
 import com.algaworks.algafood.api.dto.input.UsuarioComSenhaInput;
@@ -10,14 +11,15 @@ import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.service.CadastroUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/usuarios")
-public class UsuarioController {
+@RequestMapping(value = "/usuarios", produces = MediaType.APPLICATION_JSON_VALUE)
+public class UsuarioController implements UsuarioControllerSwagger {
 
     @Autowired
     private CadastroUsuarioService usuarioService;
@@ -57,7 +59,7 @@ public class UsuarioController {
 
     @PutMapping("/{usuarioId}/senha")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void atualizar(@PathVariable Long usuarioId, @RequestBody @Valid SenhaInput senhaInput) {
+    public void alterarSenha(@PathVariable Long usuarioId, @RequestBody @Valid SenhaInput senhaInput) {
         usuarioService.alterarSenha(usuarioId, senhaInput.getSenhaAtual(), senhaInput.getNovaSenha());
     }
 
