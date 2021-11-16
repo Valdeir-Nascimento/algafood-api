@@ -40,7 +40,7 @@ public class RestauranteProdutoFotoController {
     private FotoStorageService fotoStorageService;
 
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public FotoProdutoDTO autualizarFoto(
+    public FotoProdutoDTO atualizarFoto(
             @PathVariable Long restauranteId,
             @PathVariable Long produtoId,
             @Valid FotoProdutoInput fotoProdutoInput) throws IOException {
@@ -57,13 +57,13 @@ public class RestauranteProdutoFotoController {
         return fotoProdutoDTOAssembler.toDTO(fotoSalva);
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping
     public FotoProdutoDTO buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
         FotoProduto fotoProduto = catalogoFotoProdutoService.buscarOuFalhar(restauranteId, produtoId);
         return fotoProdutoDTOAssembler.toDTO(fotoProduto);
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.ALL_VALUE)
     public ResponseEntity<?> servirFoto(
             @PathVariable Long restauranteId,
             @PathVariable Long produtoId,
