@@ -1,18 +1,20 @@
 package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.assembler.PermissaoDTOAssember;
+import com.algaworks.algafood.api.controller.swagger.GrupoPermissaoControllerSwagger;
 import com.algaworks.algafood.api.dto.PermissaoDTO;
 import com.algaworks.algafood.domain.model.Grupo;
 import com.algaworks.algafood.domain.service.CadastroGrupoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/grupos/{grupoId}/permissoes")
-public class GrupoPermissaoController {
+@RequestMapping(value = "/grupos/{grupoId}/permissoes",  produces = MediaType.APPLICATION_JSON_VALUE)
+public class GrupoPermissaoController implements GrupoPermissaoControllerSwagger {
     @Autowired
     private CadastroGrupoService grupoService;
     @Autowired
