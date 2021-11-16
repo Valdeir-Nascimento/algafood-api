@@ -20,10 +20,8 @@ public interface PedidoControllerSwagger {
     Page<PedidoResumoDTO> pesquisar(Pageable pageable, PedidoFilter filtro);
 
     @ApiOperation("Registra um pedido")
-    @ApiResponses({
-            @ApiResponse(code = 201, message = "Pedido registrado"),
-    })
-    PedidoDTO adicionar(@ApiParam(name = "corpo", value = "Representação de um novo pedido") PedidoInput pedidoInput) ;
+    @ApiResponses({@ApiResponse(code = 201, message = "Pedido registrado")})
+    PedidoDTO adicionar(@ApiParam(name = "corpo", value = "Representação de um novo pedido", required = true) PedidoInput pedidoInput) ;
 
 
     @ApiImplicitParams({
@@ -34,7 +32,7 @@ public interface PedidoControllerSwagger {
     @ApiResponses({
             @ApiResponse(code = 404, message = "Pedido não encontrado", response = Problem.class)
     })
-    PedidoResumoDTO buscar( @ApiParam(value = "Código de um pedido", example = "f9981ca4-5a5e-4da3-af04-933861df3e55") String codigoPedido) ;
+    PedidoResumoDTO buscar( @ApiParam(value = "Código de um pedido", example = "f9981ca4-5a5e-4da3-af04-933861df3e55", required = true) String codigoPedido) ;
 
 
 }

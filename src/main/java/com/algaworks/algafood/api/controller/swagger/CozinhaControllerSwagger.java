@@ -19,7 +19,7 @@ public interface CozinhaControllerSwagger {
             @ApiResponse(code = 404, message = "Cozinha não encontrada", response = Problem.class)
     })
     CozinhaDTO buscar(
-            @ApiParam(value = "ID de uma cozinha", example = "1")
+            @ApiParam(value = "ID de uma cozinha", example = "1", required = true)
                     Long cozinhaId);
 
     @ApiOperation("Cadastra uma cozinha")
@@ -27,7 +27,7 @@ public interface CozinhaControllerSwagger {
             @ApiResponse(code = 201, message = "Cozinha cadastrada"),
     })
     CozinhaDTO adicionar(
-            @ApiParam(name = "corpo", value = "Representação de uma nova cozinha")
+            @ApiParam(name = "corpo", value = "Representação de uma nova cozinha", required = true)
                     CozinhaInput cozinhaInput);
 
     @ApiOperation("Atualiza uma cozinha por ID")
@@ -36,16 +36,14 @@ public interface CozinhaControllerSwagger {
             @ApiResponse(code = 404, message = "Cozinha não encontrada", response = Problem.class)
     })
     CozinhaDTO atualizar(
-            @ApiParam(value = "ID de uma cozinha", example = "1")
-                    Long cozinhaId,
-            @ApiParam(name = "corpo", value = "Representação de uma cozinha com os novos dados")
-                    CozinhaInput cozinhaInput);
+            @ApiParam(value = "ID de uma cozinha", example = "1", required = true) Long cozinhaId,
+            @ApiParam(name = "corpo", value = "Representação de uma cozinha com os novos dados", required = true) CozinhaInput cozinhaInput);
 
     @ApiOperation("Exclui uma cozinha por ID")
     @ApiResponses({
             @ApiResponse(code = 204, message = "Cozinha excluída"),
             @ApiResponse(code = 404, message = "Cozinha não encontrada", response = Problem.class)
     })
-    void remover(@ApiParam(value = "ID de uma cozinha", example = "1") Long cozinhaId);
+    void remover(@ApiParam(value = "ID de uma cozinha", example = "1", required = true) Long cozinhaId);
 
 }

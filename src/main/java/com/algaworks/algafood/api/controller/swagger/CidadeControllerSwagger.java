@@ -15,13 +15,13 @@ public interface CidadeControllerSwagger {
     List<CidadeDTO> listar();
 
     @ApiOperation("Cadastra uma cidade")
-    CidadeDTO adicionar(@ApiParam(name = "corpo", value = "Representação de uma nova cidade") CidadeInput cidadeInput);
+    CidadeDTO adicionar(@ApiParam(name = "corpo", value = "Representação de uma nova cidade", required = true) CidadeInput cidadeInput);
 
 
     @ApiOperation("Busca uma cidade por ID")
     @ApiResponses({@ApiResponse(code = 400, message = "ID da cidade inválido", response = Problem.class),
             @ApiResponse(code = 404, message = "Cidade não encontrada", response = Problem.class)})
-    CidadeDTO buscar(@ApiParam(value = "ID de uma cidade", example = "1") Long cidadeId);
+    CidadeDTO buscar(@ApiParam(value = "ID de uma cidade", example = "1", required = true) Long cidadeId);
 
 
     @ApiOperation("Atualiza uma cidade por ID")
@@ -29,10 +29,12 @@ public interface CidadeControllerSwagger {
             @ApiResponse(code = 200, message = "Cidade atualizada", response = Problem.class),
             @ApiResponse(code = 404, message = "Cidade não encontrada", response = Problem.class),
     })
-    CidadeDTO atualizar(Long cidadeId, @ApiParam(name = "corpo", value = "ID de uma cidade", example = "1") CidadeInput cidadeInput);
+    CidadeDTO atualizar(
+            @ApiParam(value = "ID de uma cidade", example = "1", required = true) Long cidadeId,
+            @ApiParam(name = "corpo", value = "ID de uma cidade", example = "1", required = true) CidadeInput cidadeInput);
 
     @ApiOperation("Exclui uma cidade por ID")
-    void remover(@ApiParam(name = "corpo", value = "ID de uma cidade", example = "1") Long cidadeId);
+    void remover(@ApiParam(name = "corpo", value = "ID de uma cidade", example = "1", required = true) Long cidadeId);
 
 
 
