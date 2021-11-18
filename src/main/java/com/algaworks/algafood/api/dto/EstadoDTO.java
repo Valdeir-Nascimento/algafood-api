@@ -3,10 +3,11 @@ package com.algaworks.algafood.api.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.hateoas.RepresentationModel;
 
 @Setter
 @Getter
-public class EstadoDTO {
+public class EstadoDTO extends RepresentationModel<EstadoDTO> {
 
     @ApiModelProperty(example = "1", required = true)
     private Long id;

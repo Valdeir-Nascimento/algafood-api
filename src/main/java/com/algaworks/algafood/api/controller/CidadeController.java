@@ -12,17 +12,12 @@ import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.repository.CidadeRepository;
 import com.algaworks.algafood.domain.service.CadastroCidadeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 
 
@@ -61,7 +56,11 @@ public class CidadeController implements CidadeControllerSwagger {
 
     @GetMapping("/{cidadeId}")
     public CidadeDTO buscar(@PathVariable("cidadeId") Long cidadeId) {
-        return cidadeDTOAssembler.toDTO(cidadeService.buscarOuFalhar(cidadeId));
+        CidadeDTO cidadeDTO = cidadeDTOAssembler.toDTO(cidadeService.buscarOuFalhar(cidadeId));
+        cidadeDTO.add(new Link("http://localhost:8080/cidades/1"));
+        cidadeDTO.add(new Link("http://localhost:8080/cidades", "cidades"));
+        cidadeDTO.getEstado().add(new Link("http://localhost:8080/estados/1"));
+        return cidadeDTO;
     }
 
     @PutMapping("/{cidadeId}")
