@@ -12,6 +12,7 @@ import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.repository.CidadeRepository;
 import com.algaworks.algafood.domain.service.CadastroCidadeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 
 @RestController
@@ -59,18 +61,25 @@ public class CidadeController implements CidadeControllerSwagger {
     public CidadeDTO buscar(@PathVariable("cidadeId") Long cidadeId) {
         CidadeDTO cidadeDTO = cidadeDTOAssembler.toDTO(cidadeService.buscarOuFalhar(cidadeId));
 
-        cidadeDTO.add(linkTo(CidadeController.class)
-                .slash(cidadeDTO.getId())
+        cidadeDTO.add(linkTo(methodOn(CidadeController.class)
+                .buscar(cidadeDTO.getId()))
                 .withSelfRel());
 
-        cidadeDTO.add(linkTo(CidadeController.class)
-                .withRel("cidades")
-        );
 
-        cidadeDTO.getEstado().add(linkTo(EstadoController.class)
-                .slash(cidadeDTO.getEstado().getId())
-                .withSelfRel()
-        );
+        cidadeDTO.add(linkTo(methodOn(CidadeController.class)
+                .listar())
+                .withRel("cidades"));
+
+
+
+        cidadeDTO.add(linkTo(methodOn(CidadeController.class)
+                .buscar(cidadeDTO.getEstado().getId()))
+                .withSelfRel());
+
+//        cidadeDTO.getEstado().add(linkTo(EstadoController.class)
+//                .slash(cidadeDTO.getEstado().getId())
+//                .withSelfRel()
+//        );
 
 
         return cidadeDTO;
