@@ -12,6 +12,7 @@ import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.repository.CidadeRepository;
 import com.algaworks.algafood.domain.service.CadastroCidadeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,8 +39,29 @@ public class CidadeController implements CidadeControllerSwagger {
     private CidadeInputDisassembler cidadeInputDisassembler;
 
     @GetMapping
-    public List<CidadeDTO> listar() {
-        return cidadeDTOAssembler.toCollectionDTO(cidadeRepository.findAll());
+    public CollectionModel<CidadeDTO> listar() {
+        List<CidadeDTO> cidades = cidadeDTOAssembler.toCollectionDTO(cidadeRepository.findAll());
+
+
+        CollectionModel<CidadeDTO> cidadesCollectionModel = new CollectionModel<>(cidades);
+
+        cidadesCollectionModel.forEach(cidadeDTO -> {
+            cidadeDTO.add(linkTo(methodOn(CidadeController.class)
+                    .buscar(cidadeDTO.getId()))
+                    .withSelfRel());
+            
+            cidadeDTO.add(linkTo(methodOn(CidadeController.class)
+                    .listar())
+                    .withRel("cidades"));
+
+            cidadeDTO.add(linkTo(methodOn(EstadoController.class)
+                    .buscar(cidadeDTO.getEstado().getId()))
+                    .withSelfRel());
+        });
+
+        cidadesCollectionModel.add(linkTo(CidadeController.class).withSelfRel());
+
+        return new CollectionModel<>(cidades);
     }
 
     @PostMapping
@@ -70,17 +92,9 @@ public class CidadeController implements CidadeControllerSwagger {
                 .listar())
                 .withRel("cidades"));
 
-
-
-        cidadeDTO.add(linkTo(methodOn(CidadeController.class)
+        cidadeDTO.add(linkTo(methodOn(EstadoController.class)
                 .buscar(cidadeDTO.getEstado().getId()))
                 .withSelfRel());
-
-//        cidadeDTO.getEstado().add(linkTo(EstadoController.class)
-//                .slash(cidadeDTO.getEstado().getId())
-//                .withSelfRel()
-//        );
-
 
         return cidadeDTO;
     }

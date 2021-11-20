@@ -4,15 +4,14 @@ import com.algaworks.algafood.api.dto.CidadeDTO;
 import com.algaworks.algafood.api.dto.input.CidadeInput;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import io.swagger.annotations.*;
-
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 @Api(tags = "Cidades")
 public interface CidadeControllerSwagger {
 
 
     @ApiOperation("Lista as cidades")
-    List<CidadeDTO> listar();
+    CollectionModel<CidadeDTO> listar();
 
     @ApiOperation("Cadastra uma cidade")
     CidadeDTO adicionar(@ApiParam(name = "corpo", value = "Representação de uma nova cidade", required = true) CidadeInput cidadeInput);
