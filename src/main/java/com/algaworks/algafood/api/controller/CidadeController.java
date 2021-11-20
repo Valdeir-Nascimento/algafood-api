@@ -13,7 +13,6 @@ import com.algaworks.algafood.domain.repository.CidadeRepository;
 import com.algaworks.algafood.domain.service.CadastroCidadeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -40,28 +39,7 @@ public class CidadeController implements CidadeControllerSwagger {
 
     @GetMapping
     public CollectionModel<CidadeDTO> listar() {
-        List<CidadeDTO> cidades = cidadeDTOAssembler.toCollectionDTO(cidadeRepository.findAll());
-
-
-        CollectionModel<CidadeDTO> cidadesCollectionModel = new CollectionModel<>(cidades);
-
-        cidadesCollectionModel.forEach(cidadeDTO -> {
-            cidadeDTO.add(linkTo(methodOn(CidadeController.class)
-                    .buscar(cidadeDTO.getId()))
-                    .withSelfRel());
-            
-            cidadeDTO.add(linkTo(methodOn(CidadeController.class)
-                    .listar())
-                    .withRel("cidades"));
-
-            cidadeDTO.add(linkTo(methodOn(EstadoController.class)
-                    .buscar(cidadeDTO.getEstado().getId()))
-                    .withSelfRel());
-        });
-
-        cidadesCollectionModel.add(linkTo(CidadeController.class).withSelfRel());
-
-        return new CollectionModel<>(cidades);
+        return cidadeDTOAssembler.toCollectionModel(cidadeRepository.findAll());
     }
 
     @PostMapping
@@ -69,7 +47,7 @@ public class CidadeController implements CidadeControllerSwagger {
         try {
             Cidade cidade = cidadeInputDisassembler.toDomainObject(cidadeInput);
             cidade = cidadeService.salvar(cidade);
-            CidadeDTO cidadeDTO = cidadeDTOAssembler.toDTO(cidade);
+            CidadeDTO cidadeDTO = cidadeDTOAssembler.toModel(cidade);
 
             ResourceUriUtil.addUriInResponseHeader(cidadeDTO.getId());
 
@@ -81,22 +59,7 @@ public class CidadeController implements CidadeControllerSwagger {
 
     @GetMapping("/{cidadeId}")
     public CidadeDTO buscar(@PathVariable("cidadeId") Long cidadeId) {
-        CidadeDTO cidadeDTO = cidadeDTOAssembler.toDTO(cidadeService.buscarOuFalhar(cidadeId));
-
-        cidadeDTO.add(linkTo(methodOn(CidadeController.class)
-                .buscar(cidadeDTO.getId()))
-                .withSelfRel());
-
-
-        cidadeDTO.add(linkTo(methodOn(CidadeController.class)
-                .listar())
-                .withRel("cidades"));
-
-        cidadeDTO.add(linkTo(methodOn(EstadoController.class)
-                .buscar(cidadeDTO.getEstado().getId()))
-                .withSelfRel());
-
-        return cidadeDTO;
+        return cidadeDTOAssembler.toModel(cidadeService.buscarOuFalhar(cidadeId));
     }
 
     @PutMapping("/{cidadeId}")
@@ -107,7 +70,7 @@ public class CidadeController implements CidadeControllerSwagger {
         try {
             cidadeInputDisassembler.copyDomainObject(cidadeInput, cidadeAtual);
             cidadeAtual = cidadeService.salvar(cidadeAtual);
-            return cidadeDTOAssembler.toDTO(cidadeAtual);
+            return cidadeDTOAssembler.toModel(cidadeAtual);
         } catch (EstadoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage(), e);
         }

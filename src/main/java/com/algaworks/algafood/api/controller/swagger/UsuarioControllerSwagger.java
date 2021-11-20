@@ -6,14 +6,13 @@ import com.algaworks.algafood.api.dto.input.UsuarioComSenhaInput;
 import com.algaworks.algafood.api.dto.input.UsuarioInput;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import io.swagger.annotations.*;
-
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 @Api(tags = "Usuários")
 public interface UsuarioControllerSwagger {
 
     @ApiOperation("Lista os usuários")
-    List<UsuarioDTO> listar() ;
+    CollectionModel<UsuarioDTO> listar() ;
 
     @ApiOperation("Busca um usuário por ID")
     @ApiResponses({

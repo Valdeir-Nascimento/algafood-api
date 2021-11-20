@@ -10,6 +10,7 @@ import com.algaworks.algafood.api.dto.input.UsuarioInput;
 import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.service.CadastroUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -29,9 +30,8 @@ public class UsuarioController implements UsuarioControllerSwagger {
     private UsuarioDTODisassembler usuarioDTODisassembler;
 
     @GetMapping
-    public List<UsuarioDTO> listar() {
-        List<Usuario> usuarios = usuarioService.listar();
-        return usuarioDTOAssembler.toCollectionDTO(usuarios);
+    public CollectionModel<UsuarioDTO> listar() {
+        return usuarioDTOAssembler.toCollectionModel(usuarioService.listar());
     }
 
     @PostMapping
@@ -39,13 +39,13 @@ public class UsuarioController implements UsuarioControllerSwagger {
     public UsuarioDTO adicionar(@RequestBody @Valid UsuarioComSenhaInput usuarioInput) {
         Usuario usuario = usuarioDTODisassembler.toDomainObject(usuarioInput);
         usuario = usuarioService.salvar(usuario);
-        return usuarioDTOAssembler.toDTO(usuario);
+        return usuarioDTOAssembler.toModel(usuario);
     }
 
     @GetMapping("/{usuarioId}")
     public UsuarioDTO buscar(@PathVariable Long usuarioId) {
         Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
-        return usuarioDTOAssembler.toDTO(usuario);
+        return usuarioDTOAssembler.toModel(usuario);
     }
 
     @PutMapping("/{usuarioId}")
@@ -54,7 +54,7 @@ public class UsuarioController implements UsuarioControllerSwagger {
         Usuario usuarioAtual = usuarioService.buscarOuFalhar(usuarioId);
         usuarioDTODisassembler.copyToDomainObject(usuarioInput, usuarioAtual);
         usuarioAtual = usuarioService.salvar(usuarioAtual);
-        return usuarioDTOAssembler.toDTO(usuarioAtual);
+        return usuarioDTOAssembler.toModel(usuarioAtual);
     }
 
     @PutMapping("/{usuarioId}/senha")
