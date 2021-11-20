@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.assembler;
 
 import com.algaworks.algafood.api.controller.UsuarioController;
+import com.algaworks.algafood.api.controller.UsuarioGrupoController;
 import com.algaworks.algafood.api.dto.UsuarioDTO;
 import com.algaworks.algafood.domain.model.Usuario;
 import org.modelmapper.ModelMapper;
@@ -10,6 +11,7 @@ import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSuppor
 import org.springframework.stereotype.Component;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 
 @Component
@@ -28,8 +30,9 @@ public class UsuarioDTOAssembler extends RepresentationModelAssemblerSupport<Usu
         modelMapper.map(usuario, usuarioDTO);
 
         usuarioDTO.add(linkTo(UsuarioController.class).withRel("usuarios"));
-//        usuarioDTO.add(linkTo(methodOn(UsuarioController.class)
-//                .listar(usuario.getId())).withRel("grupos-usuarios"));
+
+        usuarioDTO.add(linkTo(methodOn(UsuarioGrupoController.class)
+                .listar(usuario.getId())).withRel("grupos-usuarios"));
 
         return modelMapper.map(usuario, UsuarioDTO.class);
     }
