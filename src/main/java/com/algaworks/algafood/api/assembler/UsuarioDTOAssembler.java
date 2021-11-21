@@ -34,7 +34,7 @@ public class UsuarioDTOAssembler extends RepresentationModelAssemblerSupport<Usu
         usuarioDTO.add(linkTo(methodOn(UsuarioGrupoController.class)
                 .listar(usuario.getId())).withRel("grupos-usuarios"));
 
-        return modelMapper.map(usuario, UsuarioDTO.class);
+        return usuarioDTO;
     }
 
     @Override
