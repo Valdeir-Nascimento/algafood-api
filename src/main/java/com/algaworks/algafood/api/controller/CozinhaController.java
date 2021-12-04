@@ -13,6 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -32,18 +35,19 @@ public class CozinhaController implements CozinhaControllerSwagger {
     private CozinhaDTOAssembler cozinhaDTOAssembler;
     @Autowired
     private CozinhaInputDisassembler cozinhaInputDisassembler;
+    @Autowired
+    private PagedResourcesAssembler<Cozinha> pagedResourcesAssembler;
 
     @GetMapping
-    public Page<CozinhaDTO> listar(@PageableDefault(size = 10) Pageable pageable) {
+    public PagedModel<CozinhaDTO> listar(@PageableDefault(size = 10) Pageable pageable) {
         Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(pageable);
-        List<CozinhaDTO> cozinhas = cozinhaDTOAssembler.toCollectionDTO(cozinhasPage.getContent());
-        Page<CozinhaDTO> cozinhaDTOPage = new PageImpl<>(cozinhas, pageable, cozinhasPage.getTotalElements());
-        return cozinhaDTOPage;
+        PagedModel<CozinhaDTO> cozinhasPagedModel = pagedResourcesAssembler.toModel(cozinhasPage, cozinhaDTOAssembler);
+        return cozinhasPagedModel;
     }
 
     @GetMapping("/{cozinhaId}")
     public CozinhaDTO buscar(@PathVariable Long cozinhaId) {
-        return cozinhaDTOAssembler.toDTO(cozinhaService.buscarOuFalhar(cozinhaId));
+        return cozinhaDTOAssembler.toModel(cozinhaService.buscarOuFalhar(cozinhaId));
     }
 
     @PostMapping
@@ -51,7 +55,7 @@ public class CozinhaController implements CozinhaControllerSwagger {
     public CozinhaDTO adicionar(@RequestBody @Valid CozinhaInput cozinhaInput) {
         Cozinha cozinha = cozinhaInputDisassembler.toDomainObject(cozinhaInput);
         cozinha = cozinhaService.salvar(cozinha);
-        return cozinhaDTOAssembler.toDTO(cozinha);
+        return cozinhaDTOAssembler.toModel(cozinha);
     }
 
     @PutMapping("/{cozinhaId}")
@@ -61,7 +65,7 @@ public class CozinhaController implements CozinhaControllerSwagger {
         Cozinha cozinhaAtual = cozinhaService.buscarOuFalhar(cozinhaId);
         cozinhaInputDisassembler.copyToDomainObject(cozinhaInput, cozinhaAtual);
         cozinhaAtual = cozinhaService.salvar(cozinhaAtual);
-        return cozinhaDTOAssembler.toDTO(cozinhaAtual);
+        return cozinhaDTOAssembler.toModel(cozinhaAtual);
 
     }
 
