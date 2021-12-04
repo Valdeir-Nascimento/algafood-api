@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import com.algaworks.algafood.api.controller.swagger.EstadoControllerSwagger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,20 +38,20 @@ public class EstadoController implements EstadoControllerSwagger {
     private EstadoInputDisassembler estadoInputDisassembler;
 
     @GetMapping
-    public List<EstadoDTO> listar() {
-        return estadoDTOAssembler.toCollectionDTO(estadoService.findAll());
+    public CollectionModel<EstadoDTO> listar() {
+        return estadoDTOAssembler.toCollectionModel(estadoService.findAll());
     }
 
     @GetMapping("/{estadoId}")
     public EstadoDTO buscar(@PathVariable("estadoId") Long estadoId) {
-        return estadoDTOAssembler.toDTO(estadoService.buscarOuFalhar(estadoId));
+        return estadoDTOAssembler.toModel(estadoService.buscarOuFalhar(estadoId));
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public EstadoDTO adicionar(@RequestBody @Valid EstadoInput estadoInput) {
         Estado estado = estadoInputDisassembler.toDomainObject(estadoInput);
-        return estadoDTOAssembler.toDTO(estadoService.salvar(estado));
+        return estadoDTOAssembler.toModel(estadoService.salvar(estado));
     }
 
     @PutMapping("/{estadoId}")
@@ -58,7 +59,7 @@ public class EstadoController implements EstadoControllerSwagger {
         Estado estadoAtual = estadoService.buscarOuFalhar(estadoId);
         estadoInputDisassembler.copyToDomainObject(estadoInput, estadoAtual);
         estadoAtual = estadoService.salvar(estadoAtual);
-        return estadoDTOAssembler.toDTO(estadoAtual);
+        return estadoDTOAssembler.toModel(estadoAtual);
     }
 
     @DeleteMapping("/{estadoId}")
