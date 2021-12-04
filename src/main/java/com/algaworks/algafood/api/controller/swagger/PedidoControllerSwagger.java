@@ -6,8 +6,8 @@ import com.algaworks.algafood.api.dto.input.PedidoInput;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import com.algaworks.algafood.domain.filter.PedidoFilter;
 import io.swagger.annotations.*;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.PagedModel;
 
 @Api(tags = "Pedidos")
 public interface PedidoControllerSwagger {
@@ -17,7 +17,7 @@ public interface PedidoControllerSwagger {
                     name = "campos", paramType = "query", type = "string")
     })
     @ApiOperation("Pesquisa os pedidos")
-    Page<PedidoResumoDTO> pesquisar(Pageable pageable, PedidoFilter filtro);
+    PagedModel<PedidoResumoDTO> pesquisar(Pageable pageable, PedidoFilter filtro);
 
     @ApiOperation("Registra um pedido")
     @ApiResponses({@ApiResponse(code = 201, message = "Pedido registrado")})

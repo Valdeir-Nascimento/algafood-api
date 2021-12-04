@@ -24,6 +24,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -45,15 +47,15 @@ public class PedidoController implements PedidoControllerSwagger {
     private PedidoDTOAssembler pedidoDTOAssembler;
     @Autowired
     private PedidoInputDisassembler pedidoInputDisassembler;
+    @Autowired
+    private PagedResourcesAssembler<Pedido> pagedResourcesAssembler;
 
 
     @GetMapping
-    public Page<PedidoResumoDTO> pesquisar(@PageableDefault(size = 10) Pageable pageable, PedidoFilter filtro) {
+    public PagedModel<PedidoResumoDTO> pesquisar(@PageableDefault(size = 10) Pageable pageable, PedidoFilter filtro) {
         pageable = traduzirPeageable(pageable);
         Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecification.usandoFiltro(filtro), pageable);
-        List<PedidoResumoDTO> pedidos = pedidoResumoDTOAssembler.toCollectionModel(pedidosPage.getContent());
-        Page<PedidoResumoDTO> pedidoResumoPage = new PageImpl<>(pedidos, pageable, pedidosPage.getTotalElements());
-        return pedidoResumoPage;
+        return pagedResourcesAssembler.toModel(pedidosPage, pedidoResumoDTOAssembler);
     }
 
 
