@@ -7,6 +7,7 @@ import com.algaworks.algafood.api.controller.swagger.PedidoControllerSwagger;
 import com.algaworks.algafood.api.dto.PedidoDTO;
 import com.algaworks.algafood.api.dto.PedidoResumoDTO;
 import com.algaworks.algafood.api.dto.input.PedidoInput;
+import com.algaworks.algafood.core.data.PageWrapper;
 import com.algaworks.algafood.core.data.PageableTranslator;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
@@ -53,8 +54,10 @@ public class PedidoController implements PedidoControllerSwagger {
 
     @GetMapping
     public PagedModel<PedidoResumoDTO> pesquisar(@PageableDefault(size = 10) Pageable pageable, PedidoFilter filtro) {
-        pageable = traduzirPeageable(pageable);
-        Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecification.usandoFiltro(filtro), pageable);
+        Pageable pageableTraduzido = traduzirPeageable(pageable);
+        Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecification.usandoFiltro(filtro), pageableTraduzido);
+
+        pedidosPage = new PageWrapper<>(pedidosPage, pageable);
         return pagedResourcesAssembler.toModel(pedidosPage, pedidoResumoDTOAssembler);
     }
 

@@ -5,6 +5,10 @@ import com.algaworks.algafood.api.dto.PedidoDTO;
 import com.algaworks.algafood.domain.model.Pedido;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.TemplateVariable;
+import org.springframework.hateoas.TemplateVariables;
+import org.springframework.hateoas.UriTemplate;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +32,17 @@ public class PedidoDTOAssembler extends RepresentationModelAssemblerSupport<Pedi
         PedidoDTO pedidoDTO = createModelWithId(pedido.getId(), pedido);
         modelMapper.map(pedido, pedidoDTO);
 
-        pedidoDTO.add(linkTo(PedidoController.class).withRel("pedidos"));
+        TemplateVariables pageVariables = new TemplateVariables(
+                new TemplateVariable("page", TemplateVariable.VariableType.REQUEST_PARAM),
+                new TemplateVariable("size", TemplateVariable.VariableType.REQUEST_PARAM),
+                new TemplateVariable("sort", TemplateVariable.VariableType.REQUEST_PARAM)
+        );
+
+        String pedidosUrl = linkTo(PedidoController.class).toUri().toString();
+
+        pedidoDTO.add(new Link(UriTemplate.of(pedidosUrl, pageVariables), "pedidos"));
+
+//        pedidoDTO.add(linkTo(PedidoController.class).withRel("pedidos"));
 
         pedidoDTO.getRestaurante().add(linkTo(methodOn(RestauranteController.class)
                 .buscar(pedido.getRestaurante().getId())).withSelfRel());
