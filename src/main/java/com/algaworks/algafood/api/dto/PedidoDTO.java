@@ -43,7 +43,8 @@ public class PedidoDTO extends RepresentationModel<PedidoDTO> {
     private OffsetDateTime dataEntrega;
 
 
-    private RestauranteResumoDTO restaurante;
+//    private RestauranteResumoDTO restaurante;
+    private RestauranteApenasNomeDTO restaurante;
     private UsuarioDTO cliente;
     private FormaPagamentoDTO formaPagamento;
     private EnderecoDTO enderecoEntrega;

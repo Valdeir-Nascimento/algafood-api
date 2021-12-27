@@ -1,6 +1,6 @@
 package com.algaworks.algafood.api.assembler;
 
-import com.algaworks.algafood.api.controller.*;
+import com.algaworks.algafood.api.controller.PedidoController;
 import com.algaworks.algafood.api.dto.PedidoDTO;
 import com.algaworks.algafood.api.links.AlgaLinks;
 import com.algaworks.algafood.domain.model.Pedido;
@@ -11,9 +11,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
 public class PedidoDTOAssembler extends RepresentationModelAssemblerSupport<Pedido, PedidoDTO> {
@@ -64,7 +61,7 @@ public class PedidoDTOAssembler extends RepresentationModelAssemblerSupport<Pedi
 
     public List<PedidoDTO> toCollectionModel(List<Pedido> pedidos) {
         return pedidos.stream()
-                .map(pedido -> toModel(pedido))
+                .map(this::toModel)
                 .collect(Collectors.toList());
     }
 }
