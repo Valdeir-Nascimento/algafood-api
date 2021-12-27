@@ -29,26 +29,26 @@ import lombok.EqualsAndHashCode;
 @Data
 @Entity
 public class Restaurante {
-    
-	@EqualsAndHashCode.Include
+
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(nullable = false)
     private String nome;
-    
+
     @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
-    
+
     @ManyToOne //(fetch = FetchType.LAZY)
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
-    
+
     @Embedded
     private Endereco endereco;
     private Boolean ativo = Boolean.TRUE;
-    
+
     @CreationTimestamp
     @Column(nullable = false, columnDefinition = "datetime")
     private OffsetDateTime dataCadastro;
@@ -112,6 +112,38 @@ public class Restaurante {
 
     public boolean naoAceitaFormaPagamento(FormaPagamento formaPagamento) {
         return !aceitaFormaPagamento(formaPagamento);
+    }
+
+    public boolean isAberto() {
+        return this.aberto;
+    }
+
+    public boolean isFechado() {
+        return !isAberto();
+    }
+
+    public boolean isInativo() {
+        return !isAtivo();
+    }
+
+    public boolean isAtivo() {
+        return this.ativo;
+    }
+
+    public boolean aberturaPermitida() {
+        return isAtivo() && isFechado();
+    }
+
+    public boolean ativacaoPermitida() {
+        return isInativo();
+    }
+
+    public boolean inativacaoPermitida() {
+        return isAtivo();
+    }
+
+    public boolean fechamentoPermitido() {
+        return isAberto();
     }
 
 
