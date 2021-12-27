@@ -45,8 +45,6 @@ public class RestauranteController implements RestauranteControllerSwagger {
     @Autowired
     private RestauranteApenasNomeDTOAssembler restauranteApenasNomeDTOAssembler;
 
-
-
 //    @JsonView(RestauranteView.Resumo.class)
     @Override
     @GetMapping
@@ -86,7 +84,6 @@ public class RestauranteController implements RestauranteControllerSwagger {
 
     @Override
     @PutMapping("/{restauranteId}/ativo")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> ativar(@PathVariable Long restauranteId) {
         restauranteService.ativar(restauranteId);
         return ResponseEntity.noContent().build();
@@ -116,7 +113,6 @@ public class RestauranteController implements RestauranteControllerSwagger {
 
     @Override
     @DeleteMapping("/{restauranteId}/inativo")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> inativar(@PathVariable Long restauranteId) {
         restauranteService.inativar(restauranteId);
         return ResponseEntity.noContent().build();
@@ -124,7 +120,6 @@ public class RestauranteController implements RestauranteControllerSwagger {
 
     @Override
     @PutMapping("/{restauranteId}/abertura")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> abrir(Long restauranteId) {
         restauranteService.abrir(restauranteId);
         return ResponseEntity.noContent().build();
@@ -132,7 +127,6 @@ public class RestauranteController implements RestauranteControllerSwagger {
 
     @Override
     @PutMapping("/{restauranteId}/fechamento")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> fechar(Long restauranteId) {
         restauranteService.fechar(restauranteId);
         return ResponseEntity.noContent().build();
