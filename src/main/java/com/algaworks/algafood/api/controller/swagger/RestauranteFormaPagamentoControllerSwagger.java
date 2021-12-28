@@ -4,6 +4,7 @@ import com.algaworks.algafood.api.dto.FormaPagamentoDTO;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import io.swagger.annotations.*;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.ResponseEntity;
 
 @Api(tags = "Restaurantes")
 public interface RestauranteFormaPagamentoControllerSwagger {
@@ -20,7 +21,7 @@ public interface RestauranteFormaPagamentoControllerSwagger {
             @ApiResponse(code = 404, message = "Restaurante ou forma de pagamento não encontrado",
                     response = Problem.class)
     })
-    void desvincularFormaPagamento(
+    ResponseEntity<Void> desvincularFormaPagamento(
             @ApiParam(value = "ID do restaurante", example = "1", required = true) Long restauranteId,
             @ApiParam(value = "ID da forma de pagamento", example = "1", required = true) Long formaPagamentoId);
 

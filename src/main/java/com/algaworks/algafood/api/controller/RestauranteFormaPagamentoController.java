@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,17 +28,21 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
     @GetMapping
     public CollectionModel<FormaPagamentoDTO> listar(@PathVariable Long restauranteId) {
         Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
-        return formaPagamentoDTOAssembler
+        CollectionModel<FormaPagamentoDTO> formasPagamentoDTO = formaPagamentoDTOAssembler
                 .toCollectionModel(restaurante.getFormasPagamento())
                 .removeLinks()
                 .add(algaLinks.linkToRestauranteFormasPagamento(restauranteId));
+        formasPagamentoDTO.getContent().forEach(formaPagamentoDTO -> {
+            formaPagamentoDTO.add(algaLinks.linkToRestauranteFormaPagamentoDesassociacao(restauranteId, formaPagamentoDTO.getId(), "desassociar"));
+        });
+        return formasPagamentoDTO;
     }
 
     @Override
     @DeleteMapping("/{formaPagamentoId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void desvincularFormaPagamento(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
+    public ResponseEntity<Void> desvincularFormaPagamento(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
         restauranteService.desvincularFormaPagamento(restauranteId, formaPagamentoId);
+        return ResponseEntity.noContent().build();
     }
 
     @Override
