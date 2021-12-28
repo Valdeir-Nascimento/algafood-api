@@ -34,7 +34,7 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
 		CollectionModel<UsuarioDTO> usuariosModel = usuarioDTOAssembler
 				.toCollectionModel(restaurante.getResponsaveis())
 				.removeLinks()
-				.add(algaLinks.linkToRestauranteResponsaveis(restauranteId, null))
+				.add(algaLinks.linkToRestauranteResponsaveis(restauranteId, "restaurante-responsaveis"))
 				.add(algaLinks.linkToRestauranteResponsavelAssociacao(restauranteId, "associar"));
 
 		usuariosModel.getContent().stream().forEach(usuarioModel -> {
