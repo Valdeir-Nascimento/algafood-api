@@ -24,26 +24,49 @@ public class RestauranteDTOAssembler extends RepresentationModelAssemblerSupport
     }
 
     public RestauranteDTO toModel(Restaurante restaurante) {
-        RestauranteDTO restauranteModel = createModelWithId(restaurante.getId(), restaurante);
-        modelMapper.map(restaurante, restauranteModel);
+        RestauranteDTO restauranteDTO = createModelWithId(restaurante.getId(), restaurante);
+        modelMapper.map(restaurante, restauranteDTO);
+
+        restauranteDTO.add(algaLinks.linkToRestaurantes("restaurantes"));
 
         if (restaurante.ativacaoPermitida()) {
-            restauranteModel.add(algaLinks.linkToRestauranteAtivacao(restaurante.getId(), "ativar"));
+            restauranteDTO.add(
+                    algaLinks.linkToRestauranteAtivacao(restaurante.getId(), "ativar"));
         }
 
         if (restaurante.inativacaoPermitida()) {
-            restauranteModel.add(algaLinks.linkToRestauranteInativacao(restaurante.getId(), "inativar"));
+            restauranteDTO.add(
+                    algaLinks.linkToRestauranteInativacao(restaurante.getId(), "inativar"));
         }
 
         if (restaurante.aberturaPermitida()) {
-            restauranteModel.add(algaLinks.linkToRestauranteAbertura(restaurante.getId(), "abrir"));
+            restauranteDTO.add(
+                    algaLinks.linkToRestauranteAbertura(restaurante.getId(), "abrir"));
         }
 
         if (restaurante.fechamentoPermitido()) {
-            restauranteModel.add(algaLinks.linkToRestauranteFechamento(restaurante.getId(), "fechar"));
+            restauranteDTO.add(
+                    algaLinks.linkToRestauranteFechamento(restaurante.getId(), "fechar"));
         }
 
-        return restauranteModel;
+        restauranteDTO.add(algaLinks.linkToProdutos(restaurante.getId(), "produtos"));
+
+        restauranteDTO.getCozinha().add(
+                algaLinks.linkToCozinha(restaurante.getCozinha().getId()));
+
+        if (restauranteDTO.getEndereco() != null
+                && restauranteDTO.getEndereco().getCidade() != null) {
+            restauranteDTO.getEndereco().getCidade().add(
+                    algaLinks.linkToCidade(restaurante.getEndereco().getCidade().getId()));
+        }
+
+        restauranteDTO.add(algaLinks.linkToRestauranteFormasPagamento(restaurante.getId(),
+                "formas-pagamento"));
+
+        restauranteDTO.add(algaLinks.linkToRestauranteResponsaveis(restaurante.getId(),
+                "responsaveis"));
+
+        return restauranteDTO;
     }
 
     public CollectionModel<RestauranteDTO> toCollectionModel(Iterable<? extends Restaurante> entities) {

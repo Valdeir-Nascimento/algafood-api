@@ -5,12 +5,14 @@ import com.algaworks.algafood.api.assembler.ProdutoInputDTODisassembler;
 import com.algaworks.algafood.api.controller.swagger.RestauranteProdutoControllerSwagger;
 import com.algaworks.algafood.api.dto.ProdutoDTO;
 import com.algaworks.algafood.api.dto.input.ProdutoInput;
+import com.algaworks.algafood.api.links.AlgaLinks;
 import com.algaworks.algafood.domain.model.Produto;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.ProdutoRepository;
 import com.algaworks.algafood.domain.service.CadastroProdutoService;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -32,23 +34,26 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
     private ProdutoDTOAssembler produtoDTOAssembler;
     @Autowired
     private ProdutoInputDTODisassembler produtoInputDisassembler;
+    @Autowired
+    private AlgaLinks algaLinks;
 
     @GetMapping
-    public List<ProdutoDTO> listar(@RequestParam(required = false) boolean incluirInativos, @PathVariable Long restauranteId) {
+    public CollectionModel<ProdutoDTO> listar(@RequestParam(required = false) Boolean incluirInativos, @PathVariable Long restauranteId) {
         Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
-        List<Produto> produtos;
+        List<Produto> todosProdutos = null;
+
         if (incluirInativos) {
-            produtos = produtoRepository.findTodosByRestaurante(restaurante);
+            todosProdutos = produtoRepository.findTodosByRestaurante(restaurante);
         } else {
-            produtos = produtoRepository.findByAtivosByRestaurante(restaurante);
+            todosProdutos = produtoRepository.findByAtivosByRestaurante(restaurante);
         }
-        return produtoDTOAssembler.toCollectionDTO(produtos);
+        return produtoDTOAssembler.toCollectionModel(todosProdutos).add(algaLinks.linkToProdutos(restauranteId));
     }
 
     @GetMapping("/{produtoId}")
     public ProdutoDTO buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
         Produto produto = produtoService.buscarOuFalhar(restauranteId, produtoId);
-        return produtoDTOAssembler.toDTO(produto);
+        return produtoDTOAssembler.toModel(produto);
     }
 
     @PostMapping
@@ -59,7 +64,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
         Produto produto = produtoInputDisassembler.toDomainObject(produtoInput);
         produto.setRestaurante(restaurante);
         produto = produtoService.salvar(produto);
-        return produtoDTOAssembler.toDTO(produto);
+        return produtoDTOAssembler.toModel(produto);
     }
 
     /**
@@ -73,7 +78,7 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
         Produto produtoAtual = produtoService.buscarOuFalhar(restauranteId, produtoId);
         produtoInputDisassembler.copyToDomainObject(produtoInput, produtoAtual);
         produtoAtual = produtoService.salvar(produtoAtual);
-        return produtoDTOAssembler.toDTO(produtoAtual);
+        return produtoDTOAssembler.toModel(produtoAtual);
     }
 
 }
