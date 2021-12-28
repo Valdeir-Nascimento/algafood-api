@@ -4,6 +4,7 @@ import com.algaworks.algafood.api.dto.UsuarioDTO;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import io.swagger.annotations.*;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.ResponseEntity;
 
 @Api(tags = "Restaurantes")
 public interface RestauranteUsuarioResponsavelControllerSwagger {
@@ -17,7 +18,7 @@ public interface RestauranteUsuarioResponsavelControllerSwagger {
             @ApiResponse(code = 204, message = "Desassociação realizada com sucesso"),
             @ApiResponse(code = 404, message = "Restaurante ou usuário não encontrado", response = Problem.class)
     })
-    void desassociar(
+    ResponseEntity<Void> desassociar(
             @ApiParam(value = "ID do restaurante", example = "1", required = true) Long restauranteId,
             @ApiParam(value = "ID do usuário", example = "1", required = true) Long usuarioId);
 
@@ -27,7 +28,7 @@ public interface RestauranteUsuarioResponsavelControllerSwagger {
             @ApiResponse(code = 404, message = "Restaurante ou usuário não encontrado",
                     response = Problem.class)
     })
-    void associar(
+    ResponseEntity<Void> associar(
             @ApiParam(value = "ID do restaurante", example = "1", required = true) Long restauranteId,
             @ApiParam(value = "ID do usuário", example = "1", required = true) Long usuarioId);
 
