@@ -9,6 +9,7 @@ import com.algaworks.algafood.domain.model.FormaPagamento;
 import com.algaworks.algafood.domain.repository.FormaPagamentoRepository;
 import com.algaworks.algafood.domain.service.CadastroFormaPagamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -36,7 +37,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerSwagger
     private FormaPagamentoRepository formaPagamentoRepository;
 
     @GetMapping
-    public ResponseEntity<List<FormaPagamentoDTO>> listar(ServletWebRequest request) {
+    public ResponseEntity<CollectionModel<FormaPagamentoDTO>> listar(ServletWebRequest request) {
         ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
         String eTag = "0";
 
@@ -53,14 +54,14 @@ public class FormaPagamentoController implements FormaPagamentoControllerSwagger
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
                 .eTag(eTag)
-                .body(formaPagamentoDTOAssembler.toCollectionDTO(formaPagamentoList));
+                .body(formaPagamentoDTOAssembler.toCollectionModel(formaPagamentoList));
     }
 
     @PostMapping
     public FormaPagamentoDTO adicionar(@RequestBody @Valid FormaPagamentoInput formaPagamentoInput) {
         FormaPagamento formaPagamento = formaPagamentoInputDisassembler.toDomainObject(formaPagamentoInput);
         formaPagamento = pagamentoService.salvar(formaPagamento);
-        return formaPagamentoDTOAssembler.toDTO(formaPagamento);
+        return formaPagamentoDTOAssembler.toModel(formaPagamento);
     }
 
     @GetMapping("/{formaPagamentoId}")
@@ -81,7 +82,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerSwagger
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
                 .eTag(eTag)
-                .body(formaPagamentoDTOAssembler.toDTO(formaPagamento));
+                .body(formaPagamentoDTOAssembler.toModel(formaPagamento));
     }
 
     @PutMapping("/{formaPagamentoId}")
@@ -91,7 +92,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerSwagger
         FormaPagamento formaPagamentoAtual = pagamentoService.buscarOuFalhar(formaPagamentoId);
         formaPagamentoInputDisassembler.copyToDomainObject(formaPagamentoInput, formaPagamentoAtual);
         formaPagamentoAtual = pagamentoService.salvar(formaPagamentoAtual);
-        return formaPagamentoDTOAssembler.toDTO(formaPagamentoAtual);
+        return formaPagamentoDTOAssembler.toModel(formaPagamentoAtual);
     }
 
     @DeleteMapping("/{formaPagamentoId}")

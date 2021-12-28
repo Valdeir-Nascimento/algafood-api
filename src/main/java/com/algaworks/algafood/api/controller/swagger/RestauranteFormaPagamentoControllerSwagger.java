@@ -3,8 +3,7 @@ package com.algaworks.algafood.api.controller.swagger;
 import com.algaworks.algafood.api.dto.FormaPagamentoDTO;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import io.swagger.annotations.*;
-
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 @Api(tags = "Restaurantes")
 public interface RestauranteFormaPagamentoControllerSwagger {
@@ -13,7 +12,7 @@ public interface RestauranteFormaPagamentoControllerSwagger {
     @ApiResponses({
             @ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
     })
-    List<FormaPagamentoDTO> listar( @ApiParam(value = "ID do restaurante", example = "1", required = true) Long restauranteId);
+    CollectionModel<FormaPagamentoDTO> listar(@ApiParam(value = "ID do restaurante", example = "1", required = true) Long restauranteId);
 
     @ApiOperation("Desassociação de restaurante com forma de pagamento")
     @ApiResponses({
