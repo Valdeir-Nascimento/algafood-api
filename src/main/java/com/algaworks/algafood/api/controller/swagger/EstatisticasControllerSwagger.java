@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.controller.swagger;
 
+import com.algaworks.algafood.api.dto.EstatisticasDTO;
 import com.algaworks.algafood.api.dto.VendaDiariaDTO;
 import com.algaworks.algafood.domain.filter.VendaDiariaFilter;
 import io.swagger.annotations.*;
@@ -24,5 +25,8 @@ public interface EstatisticasControllerSwagger {
                                                         defaultValue = "+00:00") String timeOffset);
 
     ResponseEntity<byte[]> consultarVendasDiariasPdf(VendaDiariaFilter filtro, String timeOffset);
+
+    @ApiOperation(value = "Estatísticas", hidden = true)
+    EstatisticasDTO estatisticas();
 
 }
