@@ -8,11 +8,13 @@ import com.algaworks.algafood.api.dto.input.GrupoInput;
 import com.algaworks.algafood.domain.model.Grupo;
 import com.algaworks.algafood.domain.service.CadastroGrupoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -26,31 +28,35 @@ public class GrupoController implements GrupoControllerSwagger {
     @Autowired
     private GrupoDTODisassembler grupoDTODisassembler;
 
+    @Override
     @GetMapping
-    public List<GrupoDTO> listar() {
-        return grupoDTOAssembler.toCollectionDTO(grupoService.listar());
+    public CollectionModel<GrupoDTO> listar() {
+        return grupoDTOAssembler.toCollectionModel(grupoService.listar());
     }
 
+    @Override
     @GetMapping("/{grupoId}")
     public GrupoDTO buscar(@PathVariable Long grupoId) {
         Grupo grupo = grupoService.buscarOuFalhar(grupoId);
-        return grupoDTOAssembler.toDTO(grupo);
+        return grupoDTOAssembler.toModel(grupo);
     }
 
+    @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public GrupoDTO adicionar(@RequestBody @Valid GrupoInput grupoInput) {
         Grupo grupo = grupoDTODisassembler.toDomainObject(grupoInput);
         grupo = grupoService.salvar(grupo);
-        return grupoDTOAssembler.toDTO(grupo);
+        return grupoDTOAssembler.toModel(grupo);
     }
 
+    @Override
     @PutMapping("/{grupoId}")
     public GrupoDTO atualizar(@PathVariable Long grupoId, @RequestBody @Valid GrupoInput grupoInput) {
         Grupo grupo = grupoService.buscarOuFalhar(grupoId);
         grupoDTODisassembler.copyToDomainObject(grupoInput, grupo);
         grupo = grupoService.salvar(grupo);
-        return grupoDTOAssembler.toDTO(grupo);
+        return grupoDTOAssembler.toModel(grupo);
     }
 
     @DeleteMapping("/{grupoId}")

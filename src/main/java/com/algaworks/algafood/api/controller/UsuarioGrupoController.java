@@ -6,6 +6,7 @@ import com.algaworks.algafood.api.dto.GrupoDTO;
 import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.service.CadastroUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +22,9 @@ public class UsuarioGrupoController implements UsuarioGrupoControllerSwagger {
     private GrupoDTOAssembler grupoDTOAssembler;
 
     @GetMapping
-    public List<GrupoDTO> listar(@PathVariable Long usuarioId) {
+    public CollectionModel<GrupoDTO> listar(@PathVariable Long usuarioId) {
         Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
-        return grupoDTOAssembler.toCollectionDTO(usuario.getGrupos());
+        return grupoDTOAssembler.toCollectionModel(usuario.getGrupos());
     }
 
     @DeleteMapping("/{grupoId}")

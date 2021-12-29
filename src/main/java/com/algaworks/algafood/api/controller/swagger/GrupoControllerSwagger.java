@@ -4,6 +4,7 @@ import com.algaworks.algafood.api.dto.GrupoDTO;
 import com.algaworks.algafood.api.dto.input.GrupoInput;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import io.swagger.annotations.*;
+import org.springframework.hateoas.CollectionModel;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
 public interface GrupoControllerSwagger {
 
     @ApiOperation("Lista os grupos")
-    List<GrupoDTO> listar();
+    CollectionModel<GrupoDTO> listar();
 
     @ApiOperation("Busca um grupo por ID")
     @ApiResponses({

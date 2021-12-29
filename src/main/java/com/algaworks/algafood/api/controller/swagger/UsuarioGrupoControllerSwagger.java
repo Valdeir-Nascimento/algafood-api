@@ -3,8 +3,7 @@ package com.algaworks.algafood.api.controller.swagger;
 import com.algaworks.algafood.api.dto.GrupoDTO;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import io.swagger.annotations.*;
-
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 @Api(tags = "Usuários")
 public interface UsuarioGrupoControllerSwagger {
@@ -14,7 +13,7 @@ public interface UsuarioGrupoControllerSwagger {
     @ApiResponses({
             @ApiResponse(code = 404, message = "Usuário não encontrado", response = Problem.class)
     })
-    List<GrupoDTO> listar(@ApiParam(value = "ID do usuário", example = "1", required = true) Long usuarioId);
+    CollectionModel<GrupoDTO> listar(@ApiParam(value = "ID do usuário", example = "1", required = true) Long usuarioId);
 
 
     @ApiOperation("Desassociação de grupo com usuário")
