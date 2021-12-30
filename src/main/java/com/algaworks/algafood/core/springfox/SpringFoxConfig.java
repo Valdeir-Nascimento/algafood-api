@@ -88,6 +88,10 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                         typeResolver.resolve(CollectionModel.class, PermissaoDTO.class),
                         PermissoesDTOSwagger.class))
 
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(PagedModel.class, PedidoResumoDTO.class),
+                        PedidosResumoDTOSwagger.class))
+
                 .additionalModels(typeResolver.resolve(Problem.class))
                 .ignoredParameterTypes(ServletWebRequest.class, URL.class, URI.class, URLStreamHandler.class, Resource.class, File.class, InputStream.class)
                 .tags(new Tag("Cidades", "Gerencia as cidades"),
