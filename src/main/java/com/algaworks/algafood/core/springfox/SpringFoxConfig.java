@@ -1,9 +1,12 @@
 package com.algaworks.algafood.core.springfox;
 
 import com.algaworks.algafood.api.controller.swagger.PageableDTOSwagger;
+import com.algaworks.algafood.api.dto.CidadeDTO;
 import com.algaworks.algafood.api.dto.CozinhaDTO;
 import com.algaworks.algafood.api.dto.PedidoResumoDTO;
+import com.algaworks.algafood.api.dto.swagger.CidadesDTOSwagger;
 import com.algaworks.algafood.api.dto.swagger.CozinhasDTOSwagger;
+import com.algaworks.algafood.api.dto.swagger.LinksDTOSwagger;
 import com.algaworks.algafood.api.dto.swagger.PedidoResumoDTOSwagger;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import com.fasterxml.classmate.TypeResolver;
@@ -13,6 +16,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Links;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -60,10 +65,16 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
                 .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessage())
                 .directModelSubstitute(Pageable.class, PageableDTOSwagger.class)
+                .directModelSubstitute(Links.class, LinksDTOSwagger.class)
                 .alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(Page.class, CozinhaDTO.class), CozinhasDTOSwagger.class))
                 .alternateTypeRules(AlternateTypeRules.newRule(
                         typeResolver.resolve(Page.class, PedidoResumoDTO.class),
                         PedidoResumoDTOSwagger.class))
+
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(CollectionModel.class, CidadeDTO.class),
+                        CidadesDTOSwagger.class))
+
                 .additionalModels(typeResolver.resolve(Problem.class))
                 .ignoredParameterTypes(ServletWebRequest.class, URL.class, URI.class, URLStreamHandler.class, Resource.class, File.class, InputStream.class)
                 .tags(new Tag("Cidades", "Gerencia as cidades"),
