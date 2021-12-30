@@ -77,8 +77,16 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                         EstadosDTOSwagger.class))
 
                 .alternateTypeRules(AlternateTypeRules.newRule(
-                typeResolver.resolve(CollectionModel.class, FormaPagamentoDTO.class),
-                FormasPagamentoDTOSwagger.class))
+                        typeResolver.resolve(CollectionModel.class, FormaPagamentoDTO.class),
+                        FormasPagamentoDTOSwagger.class))
+
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(CollectionModel.class, GrupoDTO.class),
+                        GruposDTOSwagger.class))
+
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(CollectionModel.class, PermissaoDTO.class),
+                        PermissoesDTOSwagger.class))
 
                 .additionalModels(typeResolver.resolve(Problem.class))
                 .ignoredParameterTypes(ServletWebRequest.class, URL.class, URI.class, URLStreamHandler.class, Resource.class, File.class, InputStream.class)

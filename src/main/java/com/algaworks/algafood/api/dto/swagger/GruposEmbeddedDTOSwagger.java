@@ -1,17 +1,17 @@
 package com.algaworks.algafood.api.dto.swagger;
 
-import com.algaworks.algafood.api.dto.EstadoDTO;
+import com.algaworks.algafood.api.dto.GrupoDTO;
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
 
+@ApiModel("GruposEmbeddedDTO")
 @Setter
 @Getter
-@ApiModel("EstadosEmbeddedDTO")
-public class EstadosEmbeddedDTOSwagger {
+public class GruposEmbeddedDTOSwagger {
 
-    private List<EstadoDTO> estados;
+    private List<GrupoDTO> grupos;
 
 }

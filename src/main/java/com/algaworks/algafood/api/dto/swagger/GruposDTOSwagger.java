@@ -5,12 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.hateoas.Links;
 
+@ApiModel("GruposDTO")
 @Setter
 @Getter
-@ApiModel("FormasPagamentoDTO")
-public class FormasPagamentoDTOSwagger {
+public class GruposDTOSwagger {
 
-    private FormasPagamentoEmbeddedDTOSwagger _embedded;
+    private GruposEmbeddedDTOSwagger _embedded;
     private Links _links;
 
 }

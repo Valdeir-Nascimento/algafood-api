@@ -7,7 +7,7 @@ import org.springframework.hateoas.Links;
 
 @Setter
 @Getter
-@ApiModel("CozinhasModel")
+@ApiModel("CozinhasDTO")
 public class CozinhasDTOSwagger {
 
     private CozinhaEmbeddedDTOSwagger _embedded;

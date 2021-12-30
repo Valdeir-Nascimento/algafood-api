@@ -7,10 +7,8 @@ import org.springframework.hateoas.Links;
 
 @Setter
 @Getter
-@ApiModel("FormasPagamentoDTO")
-public class FormasPagamentoDTOSwagger {
-
-    private FormasPagamentoEmbeddedDTOSwagger _embedded;
+@ApiModel("PermissoesDTO")
+public class PermissoesDTOSwagger {
+    private PermissoesEmbeddedModelOpenApi _embedded;
     private Links _links;
-
 }
