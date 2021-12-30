@@ -1,14 +1,8 @@
 package com.algaworks.algafood.core.springfox;
 
 import com.algaworks.algafood.api.controller.swagger.PageableDTOSwagger;
-import com.algaworks.algafood.api.dto.CidadeDTO;
-import com.algaworks.algafood.api.dto.CozinhaDTO;
-import com.algaworks.algafood.api.dto.EstadoDTO;
-import com.algaworks.algafood.api.dto.PedidoResumoDTO;
-import com.algaworks.algafood.api.dto.swagger.CidadesDTOSwagger;
-import com.algaworks.algafood.api.dto.swagger.CozinhasDTOSwagger;
-import com.algaworks.algafood.api.dto.swagger.LinksDTOSwagger;
-import com.algaworks.algafood.api.dto.swagger.PedidoResumoDTOSwagger;
+import com.algaworks.algafood.api.dto.*;
+import com.algaworks.algafood.api.dto.swagger.*;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import com.fasterxml.classmate.TypeResolver;
 import org.springframework.context.annotation.Bean;
@@ -81,6 +75,10 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 .alternateTypeRules(AlternateTypeRules.newRule(
                         typeResolver.resolve(CollectionModel.class, EstadoDTO.class),
                         EstadosDTOSwagger.class))
+
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                typeResolver.resolve(CollectionModel.class, FormaPagamentoDTO.class),
+                FormasPagamentoDTOSwagger.class))
 
                 .additionalModels(typeResolver.resolve(Problem.class))
                 .ignoredParameterTypes(ServletWebRequest.class, URL.class, URI.class, URLStreamHandler.class, Resource.class, File.class, InputStream.class)

@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.controller.swagger;
 
 import com.algaworks.algafood.api.dto.FormaPagamentoDTO;
 import com.algaworks.algafood.api.dto.input.FormaPagamentoInput;
+import com.algaworks.algafood.api.dto.swagger.FormasPagamentoDTOSwagger;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import io.swagger.annotations.*;
 import org.springframework.hateoas.CollectionModel;
@@ -11,7 +12,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 @Api(tags = "Formas de pagamento")
 public interface FormaPagamentoControllerSwagger {
 
-    @ApiOperation("Lista as formas de pagamento")
+    @ApiOperation(value = "Lista as formas de pagamento", response = FormasPagamentoDTOSwagger.class)
     ResponseEntity<CollectionModel<FormaPagamentoDTO>>  listar(ServletWebRequest request);
 
     @ApiOperation("Busca uma forma de pagamento por ID")
