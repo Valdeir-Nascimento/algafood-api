@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Links;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -66,7 +67,8 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessage())
                 .directModelSubstitute(Pageable.class, PageableDTOSwagger.class)
                 .directModelSubstitute(Links.class, LinksDTOSwagger.class)
-                .alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(Page.class, CozinhaDTO.class), CozinhasDTOSwagger.class))
+                .alternateTypeRules(AlternateTypeRules.newRule(typeResolver.resolve(PagedModel.class, CozinhaDTO.class),
+                        CozinhasDTOSwagger.class))
                 .alternateTypeRules(AlternateTypeRules.newRule(
                         typeResolver.resolve(Page.class, PedidoResumoDTO.class),
                         PedidoResumoDTOSwagger.class))
