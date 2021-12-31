@@ -2,6 +2,8 @@ package com.algaworks.algafood.core.modelmapper;
 
 import com.algaworks.algafood.api.v1.dto.EnderecoDTO;
 import com.algaworks.algafood.api.v1.dto.input.ItemPedidoInput;
+import com.algaworks.algafood.api.v2.dto.input.CidadeInputV2;
+import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.model.Endereco;
 import com.algaworks.algafood.domain.model.ItemPedido;
 import org.modelmapper.ModelMapper;
@@ -14,6 +16,10 @@ public class ModelMapperConfig {
     @Bean
     public ModelMapper modelMapper() {
         var modelMapper = new ModelMapper();
+
+        modelMapper.createTypeMap(CidadeInputV2.class, Cidade.class)
+                .addMappings(mapping -> mapping.skip(Cidade::setId));
+
         var enderecoToEnderecoModelTypeMap = modelMapper
                 .createTypeMap(Endereco.class, EnderecoDTO.class);
 
@@ -23,6 +29,8 @@ public class ModelMapperConfig {
 
         modelMapper.createTypeMap(ItemPedidoInput.class, ItemPedido.class)
                 .addMappings(mapper -> mapper.skip(ItemPedido::setId));
+
+
         return modelMapper;
     }
 
