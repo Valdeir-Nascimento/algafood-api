@@ -3,7 +3,6 @@ package com.algaworks.algafood.api.controller.swagger;
 import com.algaworks.algafood.api.dto.RestauranteBasicoDTO;
 import com.algaworks.algafood.api.dto.RestauranteDTO;
 import com.algaworks.algafood.api.dto.input.RestauranteInput;
-import com.algaworks.algafood.api.dto.swagger.RestauranteBasicoDTOSwagger;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import io.swagger.annotations.*;
 import org.springframework.hateoas.CollectionModel;
@@ -14,11 +13,10 @@ import java.util.List;
 @Api(tags = "Restaurantes")
 public interface RestauranteControllerSwagger {
 
-    @ApiOperation(value = "Lista restaurantes", response = RestauranteBasicoDTOSwagger.class)
+    @ApiOperation(value = "Lista restaurantes")
     @ApiImplicitParams({
         @ApiImplicitParam(value = "Nome da projeção de pedidos", allowableValues = "apenas-nome", name = "projecao", paramType = "query", type = "string")
     })
-//    @JsonView(RestauranteView.Resumo.class)
     CollectionModel<RestauranteBasicoDTO> listar();
 
 
