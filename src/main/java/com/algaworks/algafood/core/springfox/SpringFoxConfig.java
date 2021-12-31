@@ -1,9 +1,9 @@
 package com.algaworks.algafood.core.springfox;
 
-import com.algaworks.algafood.api.controller.swagger.PageableDTOSwagger;
-import com.algaworks.algafood.api.dto.*;
-import com.algaworks.algafood.api.dto.swagger.*;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
+import com.algaworks.algafood.api.v1.controller.swagger.PageableDTOSwagger;
+import com.algaworks.algafood.api.v1.dto.*;
+import com.algaworks.algafood.api.v1.dto.swagger.*;
 import com.fasterxml.classmate.TypeResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

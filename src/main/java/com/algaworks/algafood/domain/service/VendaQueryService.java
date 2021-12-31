@@ -1,6 +1,6 @@
 package com.algaworks.algafood.domain.service;
 
-import com.algaworks.algafood.api.dto.VendaDiariaDTO;
+import com.algaworks.algafood.api.v1.dto.VendaDiariaDTO;
 import com.algaworks.algafood.domain.filter.VendaDiariaFilter;
 import org.springframework.stereotype.Service;
 

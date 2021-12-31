@@ -1,6 +1,6 @@
 package com.algaworks.algafood.infrastructure.service.email;
 
-import com.algaworks.algafood.api.dto.MensagemDTO;
+import com.algaworks.algafood.api.v1.dto.MensagemDTO;
 import com.algaworks.algafood.core.email.EmailProperties;
 import com.algaworks.algafood.domain.service.EnvioEmailService;
 import freemarker.template.Configuration;

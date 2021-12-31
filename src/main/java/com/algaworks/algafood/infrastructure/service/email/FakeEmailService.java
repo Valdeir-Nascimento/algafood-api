@@ -1,6 +1,6 @@
 package com.algaworks.algafood.infrastructure.service.email;
 
-import com.algaworks.algafood.api.dto.MensagemDTO;
+import com.algaworks.algafood.api.v1.dto.MensagemDTO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

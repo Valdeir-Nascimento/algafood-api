@@ -1,6 +1,6 @@
 package com.algaworks.algafood.domain.service;
 
-import com.algaworks.algafood.api.dto.FotoRecuperadaDTO;
+import com.algaworks.algafood.api.v1.dto.FotoRecuperadaDTO;
 import lombok.Builder;
 import lombok.Getter;
 

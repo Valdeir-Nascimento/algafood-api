@@ -1,6 +1,6 @@
 package com.algaworks.algafood.core.email;
 
-import com.algaworks.algafood.api.dto.SandboxDTO;
+import com.algaworks.algafood.api.v1.dto.SandboxDTO;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;

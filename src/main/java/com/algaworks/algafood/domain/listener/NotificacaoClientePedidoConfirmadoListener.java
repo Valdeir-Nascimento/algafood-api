@@ -1,6 +1,6 @@
 package com.algaworks.algafood.domain.listener;
 
-import com.algaworks.algafood.api.dto.MensagemDTO;
+import com.algaworks.algafood.api.v1.dto.MensagemDTO;
 import com.algaworks.algafood.domain.event.PedidoConfirmadoEvent;
 import com.algaworks.algafood.domain.model.Pedido;
 import com.algaworks.algafood.domain.service.EnvioEmailService;
