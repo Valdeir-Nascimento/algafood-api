@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(value = "/grupos", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/v1/grupos", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GrupoController implements GrupoControllerSwagger {
 
     @Autowired

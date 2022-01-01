@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/permissoes", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/v1/permissoes", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PermissaoController implements PermissaoControllerSwagger {
 
     @Autowired
