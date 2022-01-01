@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.v2.controller;
 
 import com.algaworks.algafood.api.v2.assembler.CidadeDTOAssemblerV2;
 import com.algaworks.algafood.api.v2.assembler.CidadeInputDisassemblerV2;
+import com.algaworks.algafood.api.v2.controller.swagger.CidadeControllerV2Swagger;
 import com.algaworks.algafood.api.v2.dto.CidadeDTOV2;
 import com.algaworks.algafood.api.v2.dto.input.CidadeInputV2;
 import com.algaworks.algafood.core.util.ResourceUriUtil;
@@ -21,7 +22,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/v2/cidades", produces = MediaType.APPLICATION_JSON_VALUE)
-public class CidadeControllerV2 {
+public class CidadeControllerV2 implements CidadeControllerV2Swagger {
 
     @Autowired
     private CadastroCidadeService cidadeService;

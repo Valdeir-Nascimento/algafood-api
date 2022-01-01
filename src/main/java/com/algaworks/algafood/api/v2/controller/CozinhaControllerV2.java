@@ -7,6 +7,7 @@ import com.algaworks.algafood.api.v1.dto.CozinhaDTO;
 import com.algaworks.algafood.api.v1.dto.input.CozinhaInput;
 import com.algaworks.algafood.api.v2.assembler.CozinhaDTOAssemblerV2;
 import com.algaworks.algafood.api.v2.assembler.CozinhaInputDisassemblerV2;
+import com.algaworks.algafood.api.v2.controller.swagger.CozinhaControllerV2Swagger;
 import com.algaworks.algafood.api.v2.dto.CozinhaDTOV2;
 import com.algaworks.algafood.api.v2.dto.input.CozinhaInputV2;
 import com.algaworks.algafood.domain.model.Cozinha;
@@ -28,7 +29,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/v2/cozinhas", produces = MediaType.APPLICATION_JSON_VALUE)
-public class CozinhaControllerV2 {
+public class CozinhaControllerV2 implements CozinhaControllerV2Swagger {
 
     @Autowired
     private CozinhaRepository cozinhaRepository;

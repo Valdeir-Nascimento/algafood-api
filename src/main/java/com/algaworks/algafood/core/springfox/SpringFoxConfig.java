@@ -4,6 +4,10 @@ import com.algaworks.algafood.api.exceptionhandler.Problem;
 import com.algaworks.algafood.api.v1.controller.swagger.PageableDTOSwagger;
 import com.algaworks.algafood.api.v1.dto.*;
 import com.algaworks.algafood.api.v1.dto.swagger.*;
+import com.algaworks.algafood.api.v2.controller.swagger.CidadesDTOV2Swagger;
+import com.algaworks.algafood.api.v2.controller.swagger.CozinhasDTOV2Swagger;
+import com.algaworks.algafood.api.v2.dto.CidadeDTOV2;
+import com.algaworks.algafood.api.v2.dto.CozinhaDTOV2;
 import com.fasterxml.classmate.TypeResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +25,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.schema.AlternateTypeRules;
@@ -47,14 +52,16 @@ import java.util.List;
 public class SpringFoxConfig implements WebMvcConfigurer {
 
     @Bean
-    public Docket apiDocket() {
+    public Docket apiDocketV1() {
         TypeResolver typeResolver = new TypeResolver();
 
         return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("V1")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.algaworks.algafood.api"))
+                .paths(PathSelectors.ant("/v1/**"))
                 .build()
-                .apiInfo(apiInfo())
+                .apiInfo(apiInfoV1())
                 .useDefaultResponseMessages(false)
                 .globalResponseMessage(RequestMethod.GET, globalGetResponseMessage())
                 .globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessage())
@@ -119,6 +126,36 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                         new Tag("Permissões", "Gerencia as permissões"));
     }
 
+    @Bean
+    public Docket apiDocketV2() {
+        TypeResolver typeResolver = new TypeResolver();
+
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("V2")
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.algaworks.algafood.api"))
+                .paths(PathSelectors.ant("/v2/**"))
+                .build()
+                .apiInfo(apiInfoV2())
+                .useDefaultResponseMessages(false)
+                .globalResponseMessage(RequestMethod.GET, globalGetResponseMessage())
+                .globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessage())
+                .globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
+                .globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessage())
+                .directModelSubstitute(Pageable.class, PageableDTOSwagger.class)
+                .directModelSubstitute(Links.class, LinksDTOSwagger.class)
+                .additionalModels(typeResolver.resolve(Problem.class))
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(PagedModel.class, CozinhaDTOV2.class),
+                        CozinhasDTOV2Swagger.class))
+
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(CollectionModel.class, CidadeDTOV2.class),
+                        CidadesDTOV2Swagger.class))
+                .ignoredParameterTypes(ServletWebRequest.class, URL.class, URI.class, URLStreamHandler.class, Resource.class, File.class, InputStream.class);
+
+    }
+
     private List<ResponseMessage> globalGetResponseMessage() {
         return Arrays.asList(
                 new ResponseMessageBuilder()
@@ -172,11 +209,20 @@ public class SpringFoxConfig implements WebMvcConfigurer {
         );
     }
 
-    private ApiInfo apiInfo() {
+    private ApiInfo apiInfoV1() {
         return new ApiInfoBuilder()
                 .title("Algafood API")
                 .description("API aberta para clientes e restaurantes")
                 .version("1.0.0")
+                .contact(new Contact("Algaworks", "https://www.algaworks.com", "contato@algaworks"))
+                .build();
+    }
+
+    private ApiInfo apiInfoV2() {
+        return new ApiInfoBuilder()
+                .title("Algafood API")
+                .description("API aberta para clientes e restaurantes")
+                .version("2.0.0")
                 .contact(new Contact("Algaworks", "https://www.algaworks.com", "contato@algaworks"))
                 .build();
     }
