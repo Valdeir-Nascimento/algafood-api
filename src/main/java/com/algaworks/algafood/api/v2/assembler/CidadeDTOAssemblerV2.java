@@ -1,8 +1,8 @@
 package com.algaworks.algafood.api.v2.assembler;
 
-import com.algaworks.algafood.api.v1.links.AlgaLinks;
 import com.algaworks.algafood.api.v2.controller.CidadeControllerV2;
 import com.algaworks.algafood.api.v2.dto.CidadeDTOV2;
+import com.algaworks.algafood.api.v2.links.AlgaLinksV2;
 import com.algaworks.algafood.domain.model.Cidade;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class CidadeDTOAssemblerV2 extends RepresentationModelAssemblerSupport<Ci
     private ModelMapper modelMapper;
 
     @Autowired
-    private AlgaLinks algaLinks;
+    private AlgaLinksV2 algaLinks;
 
     public CidadeDTOAssemblerV2() {
         super(CidadeControllerV2.class, CidadeDTOV2.class);

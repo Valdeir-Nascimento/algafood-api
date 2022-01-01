@@ -6,7 +6,6 @@ import com.algaworks.algafood.api.v1.controller.swagger.CidadeControllerSwagger;
 import com.algaworks.algafood.api.v1.dto.CidadeDTO;
 import com.algaworks.algafood.api.v1.dto.input.CidadeInput;
 import com.algaworks.algafood.core.util.ResourceUriUtil;
-import com.algaworks.algafood.core.web.AlgaMediaTypes;
 import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Cidade;
@@ -22,7 +21,7 @@ import javax.validation.Valid;
 
 
 @RestController
-@RequestMapping(value = "/cidades", produces = AlgaMediaTypes.V1_APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/v1/cidades", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CidadeController implements CidadeControllerSwagger {
 
     @Autowired

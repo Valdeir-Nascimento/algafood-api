@@ -5,7 +5,6 @@ import com.algaworks.algafood.api.v2.assembler.CidadeInputDisassemblerV2;
 import com.algaworks.algafood.api.v2.dto.CidadeDTOV2;
 import com.algaworks.algafood.api.v2.dto.input.CidadeInputV2;
 import com.algaworks.algafood.core.util.ResourceUriUtil;
-import com.algaworks.algafood.core.web.AlgaMediaTypes;
 import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Cidade;
@@ -14,13 +13,14 @@ import com.algaworks.algafood.domain.service.CadastroCidadeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 
 @RestController
-@RequestMapping(value = "/cidades", produces = AlgaMediaTypes.V2_APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/v2/cidades", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CidadeControllerV2 {
 
     @Autowired
