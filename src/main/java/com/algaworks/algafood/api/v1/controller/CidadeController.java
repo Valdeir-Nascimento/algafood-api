@@ -33,6 +33,7 @@ public class CidadeController implements CidadeControllerSwagger {
     @Autowired
     private CidadeInputDisassembler cidadeInputDisassembler;
 
+    @Deprecated
     @GetMapping
     public CollectionModel<CidadeDTO> listar() {
         return cidadeDTOAssembler.toCollectionModel(cidadeRepository.findAll());
