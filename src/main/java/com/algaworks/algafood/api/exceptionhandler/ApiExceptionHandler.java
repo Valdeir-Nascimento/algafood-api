@@ -1,9 +1,13 @@
 package com.algaworks.algafood.api.exceptionhandler;
 
-import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.algaworks.algafood.core.validation.ValidacaoException;
+import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
+import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
+import com.algaworks.algafood.domain.exception.NegocioException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.exc.PropertyBindingException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +29,12 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.algaworks.algafood.core.validation.ValidacaoException;
-import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
-import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
-import com.algaworks.algafood.domain.exception.NegocioException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import com.fasterxml.jackson.databind.exc.PropertyBindingException;
+import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
+@Slf4j
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -221,7 +222,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         ProblemType problemType = ProblemType.ERRO_DE_SISTEMA;
         String detail = MSG_ERRO_GENERICA_USUARIO_FINAL;
-        ex.printStackTrace();
+        log.error(ex.getMessage(), ex);
         Problem problem = createProblemBuilder(status, problemType, detail).build();
         return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
     }
