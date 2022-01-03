@@ -116,6 +116,7 @@
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports-functions</artifactId>
             <version>6.15.0</version>
+
         </dependency>
 
         <dependency>
@@ -173,6 +174,24 @@
             <groupId>org.logback-extensions</groupId>
             <artifactId>logback-ext-loggly</artifactId>
             <version>${logback-ext-loggly.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.lowagie</groupId>
+            <artifactId>itext</artifactId>
+            <version>2.1.7.js2</version>
+            <scope>compile</scope>
         </dependency>
 
         <!--
