@@ -51,7 +51,7 @@ public class CadastroUsuarioService {
     @Transactional
     public void alterarSenha(Long idUsuario, String senhaAtual, String novaSenha) {
         Usuario usuario = buscarOuFalhar(idUsuario);
-        if (usuario.senhaNaoCoincidemCom(senhaAtual)) {
+        if (!passwordEncoder.matches(senhaAtual, usuario.getSenha())) {
             throw new NegocioException("Senha atual informada não coincide com a senha do usuário.");
         }
         usuario.setSenha(passwordEncoder.encode(novaSenha));
