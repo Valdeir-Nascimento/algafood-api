@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +28,8 @@ public class CadastroUsuarioService {
     private UsuarioRepository usuarioRepository;
     @Autowired
     private CadastroGrupoService grupoService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<Usuario> listar() {
         return usuarioRepository.findAll();
@@ -39,15 +42,19 @@ public class CadastroUsuarioService {
         if (usuarioExistente.isPresent() && !usuarioExistente.get().equals(usuario)) {
             throw new NegocioException(String.format("Já existe um usuário cadastrado com e-mail %s", usuario.getEmail()));
         }
+        if (usuario.isNovo()) {
+            usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+        }
         return usuarioRepository.save(usuario);
     }
 
+    @Transactional
     public void alterarSenha(Long idUsuario, String senhaAtual, String novaSenha) {
         Usuario usuario = buscarOuFalhar(idUsuario);
         if (usuario.senhaNaoCoincidemCom(senhaAtual)) {
             throw new NegocioException("Senha atual informada não coincide com a senha do usuário.");
         }
-        usuario.setSenha(novaSenha);
+        usuario.setSenha(passwordEncoder.encode(novaSenha));
     }
 
     @Transactional
