@@ -4,6 +4,7 @@ import com.algaworks.algafood.api.v1.assembler.PermissaoDTOAssember;
 import com.algaworks.algafood.api.v1.controller.swagger.GrupoPermissaoControllerSwagger;
 import com.algaworks.algafood.api.v1.dto.PermissaoDTO;
 import com.algaworks.algafood.api.v1.links.AlgaLinks;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Grupo;
 import com.algaworks.algafood.domain.service.CadastroGrupoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ public class GrupoPermissaoController implements GrupoPermissaoControllerSwagger
     @Autowired
     private AlgaLinks algaLinks;
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @Override
     @GetMapping
     public CollectionModel<PermissaoDTO> listar(@PathVariable Long grupoId) {
@@ -41,6 +43,7 @@ public class GrupoPermissaoController implements GrupoPermissaoControllerSwagger
         return permissoesModel;
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @Override
     @DeleteMapping("/{permissaoId}")
     public ResponseEntity<Void> desvincular(@PathVariable Long grupoId, @PathVariable Long permissaoId){
@@ -48,6 +51,7 @@ public class GrupoPermissaoController implements GrupoPermissaoControllerSwagger
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @Override
     @PutMapping("/{permissaoId}")
     public ResponseEntity<Void> vincular(@PathVariable Long grupoId, @PathVariable Long permissaoId){

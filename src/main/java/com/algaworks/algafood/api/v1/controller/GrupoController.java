@@ -5,6 +5,7 @@ import com.algaworks.algafood.api.v1.assembler.GrupoDTODisassembler;
 import com.algaworks.algafood.api.v1.controller.swagger.GrupoControllerSwagger;
 import com.algaworks.algafood.api.v1.dto.GrupoDTO;
 import com.algaworks.algafood.api.v1.dto.input.GrupoInput;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Grupo;
 import com.algaworks.algafood.domain.service.CadastroGrupoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +27,14 @@ public class GrupoController implements GrupoControllerSwagger {
     @Autowired
     private GrupoDTODisassembler grupoDTODisassembler;
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @Override
     @GetMapping
     public CollectionModel<GrupoDTO> listar() {
         return grupoDTOAssembler.toCollectionModel(grupoService.listar());
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @Override
     @GetMapping("/{grupoId}")
     public GrupoDTO buscar(@PathVariable Long grupoId) {
@@ -39,6 +42,7 @@ public class GrupoController implements GrupoControllerSwagger {
         return grupoDTOAssembler.toModel(grupo);
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -48,6 +52,7 @@ public class GrupoController implements GrupoControllerSwagger {
         return grupoDTOAssembler.toModel(grupo);
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @Override
     @PutMapping("/{grupoId}")
     public GrupoDTO atualizar(@PathVariable Long grupoId, @RequestBody @Valid GrupoInput grupoInput) {
@@ -57,6 +62,7 @@ public class GrupoController implements GrupoControllerSwagger {
         return grupoDTOAssembler.toModel(grupo);
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @DeleteMapping("/{grupoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void excluir(@PathVariable Long grupoId) {

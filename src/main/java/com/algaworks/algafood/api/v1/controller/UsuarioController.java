@@ -7,6 +7,7 @@ import com.algaworks.algafood.api.v1.dto.UsuarioDTO;
 import com.algaworks.algafood.api.v1.dto.input.SenhaInput;
 import com.algaworks.algafood.api.v1.dto.input.UsuarioComSenhaInput;
 import com.algaworks.algafood.api.v1.dto.input.UsuarioInput;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.service.CadastroUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +29,13 @@ public class UsuarioController implements UsuarioControllerSwagger {
     @Autowired
     private UsuarioDTODisassembler usuarioDTODisassembler;
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @GetMapping
     public CollectionModel<UsuarioDTO> listar() {
         return usuarioDTOAssembler.toCollectionModel(usuarioService.listar());
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UsuarioDTO adicionar(@RequestBody @Valid UsuarioComSenhaInput usuarioInput) {
@@ -41,12 +44,14 @@ public class UsuarioController implements UsuarioControllerSwagger {
         return usuarioDTOAssembler.toModel(usuario);
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @GetMapping("/{usuarioId}")
     public UsuarioDTO buscar(@PathVariable Long usuarioId) {
         Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
         return usuarioDTOAssembler.toModel(usuario);
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeAlterarUsuario
     @PutMapping("/{usuarioId}")
     public UsuarioDTO atualizar(
             @PathVariable Long usuarioId, @RequestBody @Valid UsuarioInput usuarioInput) {
@@ -62,6 +67,7 @@ public class UsuarioController implements UsuarioControllerSwagger {
         usuarioService.alterarSenha(usuarioId, senhaInput.getSenhaAtual(), senhaInput.getNovaSenha());
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @DeleteMapping("/{usuarioId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void excluir(@PathVariable Long usuarioId) {

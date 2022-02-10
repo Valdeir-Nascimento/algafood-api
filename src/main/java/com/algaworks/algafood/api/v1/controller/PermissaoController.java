@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.v1.controller;
 import com.algaworks.algafood.api.v1.assembler.PermissaoDTOAssember;
 import com.algaworks.algafood.api.v1.controller.swagger.PermissaoControllerSwagger;
 import com.algaworks.algafood.api.v1.dto.PermissaoDTO;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Permissao;
 import com.algaworks.algafood.domain.repository.PermissaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class PermissaoController implements PermissaoControllerSwagger {
     @Autowired
     private PermissaoDTOAssember permissaoDTOAssember;
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @Override
     @GetMapping
     public CollectionModel<PermissaoDTO> listar() {

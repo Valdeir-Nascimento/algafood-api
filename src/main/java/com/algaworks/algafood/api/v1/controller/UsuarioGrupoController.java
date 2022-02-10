@@ -4,6 +4,7 @@ import com.algaworks.algafood.api.v1.assembler.GrupoDTOAssembler;
 import com.algaworks.algafood.api.v1.controller.swagger.UsuarioGrupoControllerSwagger;
 import com.algaworks.algafood.api.v1.dto.GrupoDTO;
 import com.algaworks.algafood.api.v1.links.AlgaLinks;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.service.CadastroUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ public class UsuarioGrupoController implements UsuarioGrupoControllerSwagger {
     @Autowired
     private AlgaLinks algaLinks;
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @Override
     @GetMapping
     public CollectionModel<GrupoDTO> listar(@PathVariable Long usuarioId) {
@@ -38,6 +40,7 @@ public class UsuarioGrupoController implements UsuarioGrupoControllerSwagger {
         return gruposModel;
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @Override
     @DeleteMapping("/{grupoId}")
     public ResponseEntity<Void> desvincular(@PathVariable Long usuarioId, @PathVariable Long grupoId) {
@@ -45,6 +48,7 @@ public class UsuarioGrupoController implements UsuarioGrupoControllerSwagger {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeEditar
     @Override
     @PutMapping("/{grupoId}")
     public ResponseEntity<Void> vincular(@PathVariable Long usuarioId, @PathVariable Long grupoId) {
