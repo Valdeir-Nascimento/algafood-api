@@ -4,6 +4,7 @@ import com.algaworks.algafood.api.v1.controller.swagger.EstatisticasControllerSw
 import com.algaworks.algafood.api.v1.dto.EstatisticasDTO;
 import com.algaworks.algafood.api.v1.dto.VendaDiariaDTO;
 import com.algaworks.algafood.api.v1.links.AlgaLinks;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.filter.VendaDiariaFilter;
 import com.algaworks.algafood.domain.service.VendaQueryService;
 import com.algaworks.algafood.domain.service.VendaReportService;
@@ -29,11 +30,13 @@ public class EstatisticasController implements EstatisticasControllerSwagger {
     @Autowired
     private AlgaLinks algaLinks;
 
+    @CheckSecurity.Estatisticas.PodeConsultar
     @GetMapping(path = "/vendas-diarias", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<VendaDiariaDTO> consultarVendasDiarias(VendaDiariaFilter filtro, @RequestParam(required = false, defaultValue = "+00:00") String timeOffset) {
         return vendaQueryService.consultarVendasDiarias(filtro, timeOffset);
     }
 
+    @CheckSecurity.Estatisticas.PodeConsultar
     @GetMapping(path = "/vendas-diarias", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> consultarVendasDiariasPdf(VendaDiariaFilter filtro, @RequestParam(required = false, defaultValue = "+00:00") String timeOffset) {
         byte[] bytesPDF = vendaReportService.emitirVendasDiarias(filtro, timeOffset);
@@ -50,9 +53,7 @@ public class EstatisticasController implements EstatisticasControllerSwagger {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public EstatisticasDTO estatisticas() {
         var estatisticasModel = new EstatisticasDTO();
-
         estatisticasModel.add(algaLinks.linkToEstatisticasVendasDiarias("vendas-diarias"));
-
         return estatisticasModel;
     }
 
