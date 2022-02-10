@@ -5,6 +5,7 @@ import com.algaworks.algafood.api.v1.assembler.EstadoInputDisassembler;
 import com.algaworks.algafood.api.v1.controller.swagger.EstadoControllerSwagger;
 import com.algaworks.algafood.api.v1.dto.EstadoDTO;
 import com.algaworks.algafood.api.v1.dto.input.EstadoInput;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.service.CadastroEstadoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,16 +27,19 @@ public class EstadoController implements EstadoControllerSwagger {
     @Autowired
     private EstadoInputDisassembler estadoInputDisassembler;
 
+    @CheckSecurity.Estados.PodeConsultar
     @GetMapping
     public CollectionModel<EstadoDTO> listar() {
         return estadoDTOAssembler.toCollectionModel(estadoService.findAll());
     }
 
+    @CheckSecurity.Estados.PodeConsultar
     @GetMapping("/{estadoId}")
     public EstadoDTO buscar(@PathVariable("estadoId") Long estadoId) {
         return estadoDTOAssembler.toModel(estadoService.buscarOuFalhar(estadoId));
     }
 
+    @CheckSecurity.Estados.PodeEditar
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public EstadoDTO adicionar(@RequestBody @Valid EstadoInput estadoInput) {
@@ -43,6 +47,7 @@ public class EstadoController implements EstadoControllerSwagger {
         return estadoDTOAssembler.toModel(estadoService.salvar(estado));
     }
 
+    @CheckSecurity.Estados.PodeEditar
     @PutMapping("/{estadoId}")
     public EstadoDTO atualizar(@PathVariable("estadoId") Long estadoId, @RequestBody @Valid EstadoInput estadoInput) {
         Estado estadoAtual = estadoService.buscarOuFalhar(estadoId);
@@ -51,6 +56,7 @@ public class EstadoController implements EstadoControllerSwagger {
         return estadoDTOAssembler.toModel(estadoAtual);
     }
 
+    @CheckSecurity.Estados.PodeEditar
     @DeleteMapping("/{estadoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void excluir(@PathVariable Long estadoId) {

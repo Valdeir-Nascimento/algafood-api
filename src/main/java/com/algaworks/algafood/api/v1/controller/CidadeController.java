@@ -5,6 +5,7 @@ import com.algaworks.algafood.api.v1.assembler.CidadeInputDisassembler;
 import com.algaworks.algafood.api.v1.controller.swagger.CidadeControllerSwagger;
 import com.algaworks.algafood.api.v1.dto.CidadeDTO;
 import com.algaworks.algafood.api.v1.dto.input.CidadeInput;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.core.util.ResourceUriUtil;
 import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.exception.NegocioException;
@@ -33,12 +34,13 @@ public class CidadeController implements CidadeControllerSwagger {
     @Autowired
     private CidadeInputDisassembler cidadeInputDisassembler;
 
-    @Deprecated
+    @CheckSecurity.Cidades.PodeConsultar
     @GetMapping
     public CollectionModel<CidadeDTO> listar() {
         return cidadeDTOAssembler.toCollectionModel(cidadeRepository.findAll());
     }
 
+    @CheckSecurity.Cidades.PodeEditar
     @PostMapping
     public CidadeDTO adicionar(@RequestBody @Valid CidadeInput cidadeInput) {
         try {
@@ -54,11 +56,13 @@ public class CidadeController implements CidadeControllerSwagger {
         }
     }
 
+    @CheckSecurity.Cidades.PodeConsultar
     @GetMapping("/{cidadeId}")
     public CidadeDTO buscar(@PathVariable("cidadeId") Long cidadeId) {
         return cidadeDTOAssembler.toModel(cidadeService.buscarOuFalhar(cidadeId));
     }
 
+    @CheckSecurity.Cidades.PodeEditar
     @PutMapping("/{cidadeId}")
     public CidadeDTO atualizar(
             @PathVariable("cidadeId") Long cidadeId,
@@ -73,6 +77,7 @@ public class CidadeController implements CidadeControllerSwagger {
         }
     }
 
+    @CheckSecurity.Cidades.PodeEditar
     @DeleteMapping("/{cidadeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long cidadeId) {
