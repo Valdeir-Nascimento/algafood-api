@@ -5,6 +5,7 @@ import com.algaworks.algafood.api.v1.assembler.FormaPagamentoInputDisassembler;
 import com.algaworks.algafood.api.v1.controller.swagger.FormaPagamentoControllerSwagger;
 import com.algaworks.algafood.api.v1.dto.FormaPagamentoDTO;
 import com.algaworks.algafood.api.v1.dto.input.FormaPagamentoInput;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.FormaPagamento;
 import com.algaworks.algafood.domain.repository.FormaPagamentoRepository;
 import com.algaworks.algafood.domain.service.CadastroFormaPagamentoService;
@@ -36,6 +37,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerSwagger
     @Autowired
     private FormaPagamentoRepository formaPagamentoRepository;
 
+    @CheckSecurity.FormasPagamento.PodeConsultar
     @GetMapping
     public ResponseEntity<CollectionModel<FormaPagamentoDTO>> listar(ServletWebRequest request) {
         ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
@@ -57,6 +59,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerSwagger
                 .body(formaPagamentoDTOAssembler.toCollectionModel(formaPagamentoList));
     }
 
+    @CheckSecurity.FormasPagamento.PodeEditar
     @PostMapping
     public FormaPagamentoDTO adicionar(@RequestBody @Valid FormaPagamentoInput formaPagamentoInput) {
         FormaPagamento formaPagamento = formaPagamentoInputDisassembler.toDomainObject(formaPagamentoInput);
@@ -64,6 +67,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerSwagger
         return formaPagamentoDTOAssembler.toModel(formaPagamento);
     }
 
+    @CheckSecurity.FormasPagamento.PodeConsultar
     @GetMapping("/{formaPagamentoId}")
     public ResponseEntity<FormaPagamentoDTO> buscar(@PathVariable Long formaPagamentoId, ServletWebRequest request) {
         ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
@@ -85,6 +89,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerSwagger
                 .body(formaPagamentoDTOAssembler.toModel(formaPagamento));
     }
 
+    @CheckSecurity.FormasPagamento.PodeEditar
     @PutMapping("/{formaPagamentoId}")
     public FormaPagamentoDTO atualizar(
             @PathVariable Long formaPagamentoId,
@@ -95,6 +100,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerSwagger
         return formaPagamentoDTOAssembler.toModel(formaPagamentoAtual);
     }
 
+    @CheckSecurity.FormasPagamento.PodeEditar
     @DeleteMapping("/{formaPagamentoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long formaPagamentoId) {
