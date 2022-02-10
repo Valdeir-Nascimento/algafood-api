@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.v1.controller;
 
 import com.algaworks.algafood.api.v1.controller.swagger.FluxoPedidoControllerSwagger;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.service.FluxoPedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ public class FluxoPedidoController implements FluxoPedidoControllerSwagger {
     @Autowired
     private FluxoPedidoService fluxoPedidoService;
 
+    @CheckSecurity.Pedidos.PodeGerenciarPedidos
     @Override
     @PutMapping("/confirmacao")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -23,6 +25,7 @@ public class FluxoPedidoController implements FluxoPedidoControllerSwagger {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Pedidos.PodeGerenciarPedidos
     @Override
     @PutMapping("/cancelamento")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -31,6 +34,7 @@ public class FluxoPedidoController implements FluxoPedidoControllerSwagger {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Pedidos.PodeGerenciarPedidos
     @Override
     @PutMapping("/entrega")
     @ResponseStatus(HttpStatus.NO_CONTENT)

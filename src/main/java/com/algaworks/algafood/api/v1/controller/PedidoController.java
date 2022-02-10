@@ -68,6 +68,7 @@ public class PedidoController implements PedidoControllerSwagger {
         return pedidoResumoDTOAssembler.toModel(pedido);
     }
 
+    @CheckSecurity.Pedidos.PodeCriar
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PedidoDTO adicionar(@Valid @RequestBody PedidoInput pedidoInput) {
