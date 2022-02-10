@@ -5,6 +5,7 @@ import com.algaworks.algafood.api.v1.assembler.CozinhaInputDisassembler;
 import com.algaworks.algafood.api.v1.controller.swagger.CozinhaControllerSwagger;
 import com.algaworks.algafood.api.v1.dto.CozinhaDTO;
 import com.algaworks.algafood.api.v1.dto.input.CozinhaInput;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.service.CadastroCozinhaService;
@@ -39,6 +40,8 @@ public class CozinhaController implements CozinhaControllerSwagger {
     @Autowired
     private PagedResourcesAssembler<Cozinha> pagedResourcesAssembler;
 
+
+    //@CheckSecurity.Cozinhas.PodeConsultar
     @GetMapping
     public PagedModel<CozinhaDTO> listar(@PageableDefault(size = 10) Pageable pageable) {
         log.info("Consultando cozinhas com {} registros...", pageable.getPageSize());
@@ -52,6 +55,7 @@ public class CozinhaController implements CozinhaControllerSwagger {
         return cozinhaDTOAssembler.toModel(cozinhaService.buscarOuFalhar(cozinhaId));
     }
 
+    //@CheckSecurity.Cozinhas.PodeEditar
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CozinhaDTO adicionar(@RequestBody @Valid CozinhaInput cozinhaInput) {
@@ -60,6 +64,7 @@ public class CozinhaController implements CozinhaControllerSwagger {
         return cozinhaDTOAssembler.toModel(cozinha);
     }
 
+    //@CheckSecurity.Cozinhas.PodeEditar
     @PutMapping("/{cozinhaId}")
     public CozinhaDTO atualizar(
             @PathVariable("cozinhaId") Long cozinhaId,
@@ -71,6 +76,7 @@ public class CozinhaController implements CozinhaControllerSwagger {
 
     }
 
+    //@CheckSecurity.Cozinhas.PodeEditar
     @DeleteMapping("/{cozinhaId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable("cozinhaId") Long cozinhaId) {

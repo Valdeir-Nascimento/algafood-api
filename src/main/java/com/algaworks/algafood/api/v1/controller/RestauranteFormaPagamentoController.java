@@ -4,6 +4,7 @@ import com.algaworks.algafood.api.v1.assembler.FormaPagamentoDTOAssembler;
 import com.algaworks.algafood.api.v1.controller.swagger.RestauranteFormaPagamentoControllerSwagger;
 import com.algaworks.algafood.api.v1.dto.FormaPagamentoDTO;
 import com.algaworks.algafood.api.v1.links.AlgaLinks;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
     @Autowired
     private AlgaLinks algaLinks;
 
+    @CheckSecurity.Restaurantes.PodeConsultar
     @Override
     @GetMapping
     public CollectionModel<FormaPagamentoDTO> listar(@PathVariable Long restauranteId) {
@@ -39,6 +41,7 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
         return formasPagamentoDTO;
     }
 
+    @CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
     @Override
     @DeleteMapping("/{formaPagamentoId}")
     public ResponseEntity<Void> desvincularFormaPagamento(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {
@@ -46,6 +49,7 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
     @Override
     @PutMapping("/{formaPagamentoId}")
     public ResponseEntity<Void> vincularFormaPagamento(@PathVariable Long restauranteId, @PathVariable Long formaPagamentoId) {

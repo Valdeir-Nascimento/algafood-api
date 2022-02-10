@@ -9,6 +9,8 @@ import com.algaworks.algafood.api.v1.dto.PedidoResumoDTO;
 import com.algaworks.algafood.api.v1.dto.input.PedidoInput;
 import com.algaworks.algafood.core.data.PageWrapper;
 import com.algaworks.algafood.core.data.PageableTranslator;
+import com.algaworks.algafood.core.security.AlgaSecurity;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Pedido;
@@ -46,8 +48,10 @@ public class PedidoController implements PedidoControllerSwagger {
     private PedidoInputDisassembler pedidoInputDisassembler;
     @Autowired
     private PagedResourcesAssembler<Pedido> pagedResourcesAssembler;
+    @Autowired
+    private AlgaSecurity algaSecurity;
 
-
+    @CheckSecurity.Pedidos.PodePesquisar
     @GetMapping
     public PagedModel<PedidoResumoDTO> pesquisar(@PageableDefault(size = 10) Pageable pageable, PedidoFilter filtro) {
         Pageable pageableTraduzido = traduzirPeageable(pageable);
@@ -57,7 +61,7 @@ public class PedidoController implements PedidoControllerSwagger {
         return pagedResourcesAssembler.toModel(pedidosPage, pedidoResumoDTOAssembler);
     }
 
-
+    @CheckSecurity.Pedidos.PodeBuscar
     @GetMapping("/{codigoPedido}")
     public PedidoResumoDTO buscar(@PathVariable String codigoPedido) {
         Pedido pedido = emissaoPedidoService.buscarOuFalhar(codigoPedido);
@@ -70,8 +74,9 @@ public class PedidoController implements PedidoControllerSwagger {
         try {
             Pedido novoPedido = pedidoInputDisassembler.toDomainObject(pedidoInput);
 
-            //TODO pegar usuario autenticado
             novoPedido.setCliente(new Usuario());
+
+            //TODO: Pegar usuário logado
             novoPedido.getCliente().setId(1L);
 
             novoPedido = emissaoPedidoService.emitir(novoPedido);
