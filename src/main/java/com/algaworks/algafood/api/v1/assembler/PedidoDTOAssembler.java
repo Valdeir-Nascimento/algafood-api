@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.v1.assembler;
 import com.algaworks.algafood.api.v1.controller.PedidoController;
 import com.algaworks.algafood.api.v1.dto.PedidoDTO;
 import com.algaworks.algafood.api.v1.links.AlgaLinks;
+import com.algaworks.algafood.core.security.AlgaSecurity;
 import com.algaworks.algafood.domain.model.Pedido;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,53 +16,58 @@ import java.util.stream.Collectors;
 @Component
 public class PedidoDTOAssembler extends RepresentationModelAssemblerSupport<Pedido, PedidoDTO> {
 
-    @Autowired
-    private ModelMapper modelMapper;
+	@Autowired
+	private ModelMapper modelMapper;
 
-    @Autowired
-    private AlgaLinks algaLinks;
+	@Autowired
+	private AlgaLinks algaLinks;
 
-    public PedidoDTOAssembler() {
-        super(PedidoController.class, PedidoDTO.class);
-    }
+	@Autowired
+	private AlgaSecurity algaSecurity;
 
-    @Override
-    public PedidoDTO toModel(Pedido pedido) {
-        PedidoDTO pedidoDTO = createModelWithId(pedido.getId(), pedido);
-        modelMapper.map(pedido, pedidoDTO);
+	public PedidoDTOAssembler() {
+		super(PedidoController.class, PedidoDTO.class);
+	}
 
-        pedidoDTO.add(algaLinks.linkToPedidos());
+	@Override
+	public PedidoDTO toModel(Pedido pedido) {
+		PedidoDTO pedidoDTO = createModelWithId(pedido.getId(), pedido);
+		modelMapper.map(pedido, pedidoDTO);
 
-        if (pedido.podeSerConfirmado()) {
-            pedidoDTO.add(algaLinks.linkToConfirmacaoPedido(pedidoDTO.getCodigo(), "confirmar   "));
-        }
+		pedidoDTO.add(algaLinks.linkToPedidos());
 
-        if (pedido.podeSerEntregue()) {
-            pedidoDTO.add(algaLinks.linkToEntregaPedido(pedidoDTO.getCodigo(), "entregar"));
-        }
+		if (algaSecurity.podeGerenciarPedidos(pedido.getCodigo())) {
 
-        if (pedido.podeSerCancelado()) {
-            pedidoDTO.add(algaLinks.linkToCancelamentoPedido(pedidoDTO.getCodigo(), "cancelar"));
-        }
+			if (pedido.podeSerConfirmado()) {
+				pedidoDTO.add(algaLinks.linkToConfirmacaoPedido(pedidoDTO.getCodigo(), "confirmar"));
+			}
 
-        pedidoDTO.getRestaurante().add(algaLinks.linkToRestaurante(pedido.getRestaurante().getId()));
+			if (pedido.podeSerEntregue()) {
+				pedidoDTO.add(algaLinks.linkToEntregaPedido(pedidoDTO.getCodigo(), "entregar"));
+			}
 
-        pedidoDTO.getCliente().add(algaLinks.linkToUsuario(pedido.getCliente().getId()));
+			if (pedido.podeSerCancelado()) {
+				pedidoDTO.add(algaLinks.linkToCancelamentoPedido(pedidoDTO.getCodigo(), "cancelar"));
+			}
+		}
 
-        pedidoDTO.getFormaPagamento().add(algaLinks.linkToFormaPagamento(pedido.getFormaPagamento().getId()));
+		pedidoDTO.getRestaurante().add(algaLinks.linkToRestaurante(pedido.getRestaurante().getId()));
 
-        pedidoDTO.getEnderecoEntrega().getCidade().add(algaLinks.linkToCidade(pedido.getEnderecoEntrega().getCidade().getId()));
+		pedidoDTO.getCliente().add(algaLinks.linkToUsuario(pedido.getCliente().getId()));
 
-        pedidoDTO.getItens().forEach(item -> {
-            item.add(algaLinks.linkToProduto(pedidoDTO.getRestaurante().getId(), item.getProdutoId(), "produto"));
-        });
+		pedidoDTO.getFormaPagamento().add(algaLinks.linkToFormaPagamento(pedido.getFormaPagamento().getId()));
 
-        return pedidoDTO;
-    }
+		pedidoDTO.getEnderecoEntrega().getCidade()
+				.add(algaLinks.linkToCidade(pedido.getEnderecoEntrega().getCidade().getId()));
 
-    public List<PedidoDTO> toCollectionModel(List<Pedido> pedidos) {
-        return pedidos.stream()
-                .map(this::toModel)
-                .collect(Collectors.toList());
-    }
+		pedidoDTO.getItens().forEach(item -> {
+			item.add(algaLinks.linkToProduto(pedidoDTO.getRestaurante().getId(), item.getProdutoId(), "produto"));
+		});
+
+		return pedidoDTO;
+	}
+
+	public List<PedidoDTO> toCollectionModel(List<Pedido> pedidos) {
+		return pedidos.stream().map(this::toModel).collect(Collectors.toList());
+	}
 }
