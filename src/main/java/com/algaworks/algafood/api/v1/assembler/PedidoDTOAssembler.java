@@ -18,10 +18,8 @@ public class PedidoDTOAssembler extends RepresentationModelAssemblerSupport<Pedi
 
 	@Autowired
 	private ModelMapper modelMapper;
-
 	@Autowired
 	private AlgaLinks algaLinks;
-
 	@Autowired
 	private AlgaSecurity algaSecurity;
 
@@ -31,38 +29,56 @@ public class PedidoDTOAssembler extends RepresentationModelAssemblerSupport<Pedi
 
 	@Override
 	public PedidoDTO toModel(Pedido pedido) {
-		PedidoDTO pedidoDTO = createModelWithId(pedido.getId(), pedido);
+		PedidoDTO pedidoDTO = createModelWithId(pedido.getCodigo(), pedido);
 		modelMapper.map(pedido, pedidoDTO);
 
-		pedidoDTO.add(algaLinks.linkToPedidos());
+		// Não usei o método algaSecurity.podePesquisarPedidos(clienteId, restauranteId)
+		// aqui,
+		// porque na geração do link, não temos o id do cliente e do restaurante,
+		// então precisamos saber apenas se a requisição está autenticada e tem o escopo
+		// de leitura
+		if (algaSecurity.podePesquisarPedidos()) {
+			pedidoDTO.add(algaLinks.linkToPedidos("pedidos"));
+		}
 
 		if (algaSecurity.podeGerenciarPedidos(pedido.getCodigo())) {
-
 			if (pedido.podeSerConfirmado()) {
-				pedidoDTO.add(algaLinks.linkToConfirmacaoPedido(pedidoDTO.getCodigo(), "confirmar"));
-			}
-
-			if (pedido.podeSerEntregue()) {
-				pedidoDTO.add(algaLinks.linkToEntregaPedido(pedidoDTO.getCodigo(), "entregar"));
+				pedidoDTO.add(algaLinks.linkToConfirmacaoPedido(pedido.getCodigo(), "confirmar"));
 			}
 
 			if (pedido.podeSerCancelado()) {
-				pedidoDTO.add(algaLinks.linkToCancelamentoPedido(pedidoDTO.getCodigo(), "cancelar"));
+				pedidoDTO.add(algaLinks.linkToCancelamentoPedido(pedido.getCodigo(), "cancelar"));
+			}
+
+			if (pedido.podeSerEntregue()) {
+				pedidoDTO.add(algaLinks.linkToEntregaPedido(pedido.getCodigo(), "entregar"));
 			}
 		}
 
-		pedidoDTO.getRestaurante().add(algaLinks.linkToRestaurante(pedido.getRestaurante().getId()));
+		if (algaSecurity.podeConsultarRestaurantes()) {
+			pedidoDTO.getRestaurante().add(algaLinks.linkToRestaurante(pedido.getRestaurante().getId()));
+		}
 
-		pedidoDTO.getCliente().add(algaLinks.linkToUsuario(pedido.getCliente().getId()));
+		if (algaSecurity.podeConsultarUsuariosGruposPermissoes()) {
+			pedidoDTO.getCliente().add(algaLinks.linkToUsuario(pedido.getCliente().getId()));
+		}
 
-		pedidoDTO.getFormaPagamento().add(algaLinks.linkToFormaPagamento(pedido.getFormaPagamento().getId()));
+		if (algaSecurity.podeConsultarFormasPagamento()) {
+			pedidoDTO.getFormaPagamento().add(algaLinks.linkToFormaPagamento(pedido.getFormaPagamento().getId()));
+		}
 
-		pedidoDTO.getEnderecoEntrega().getCidade()
-				.add(algaLinks.linkToCidade(pedido.getEnderecoEntrega().getCidade().getId()));
+		if (algaSecurity.podeConsultarCidades()) {
+			pedidoDTO.getEnderecoEntrega().getCidade()
+					.add(algaLinks.linkToCidade(pedido.getEnderecoEntrega().getCidade().getId()));
+		}
 
-		pedidoDTO.getItens().forEach(item -> {
-			item.add(algaLinks.linkToProduto(pedidoDTO.getRestaurante().getId(), item.getProdutoId(), "produto"));
-		});
+		// Quem pode consultar restaurantes, também pode consultar os produtos dos
+		// restaurantes
+		if (algaSecurity.podeConsultarRestaurantes()) {
+			pedidoDTO.getItens().forEach(item -> {
+				item.add(algaLinks.linkToProduto(pedidoDTO.getRestaurante().getId(), item.getProdutoId(), "produto"));
+			});
+		}
 
 		return pedidoDTO;
 	}
