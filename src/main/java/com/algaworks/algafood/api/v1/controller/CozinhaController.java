@@ -41,7 +41,7 @@ public class CozinhaController implements CozinhaControllerSwagger {
     private PagedResourcesAssembler<Cozinha> pagedResourcesAssembler;
 
 
-    //@CheckSecurity.Cozinhas.PodeConsultar
+    @CheckSecurity.Cozinhas.PodeConsultar
     @GetMapping
     public PagedModel<CozinhaDTO> listar(@PageableDefault(size = 10) Pageable pageable) {
         log.info("Consultando cozinhas com {} registros...", pageable.getPageSize());
@@ -55,7 +55,7 @@ public class CozinhaController implements CozinhaControllerSwagger {
         return cozinhaDTOAssembler.toModel(cozinhaService.buscarOuFalhar(cozinhaId));
     }
 
-    //@CheckSecurity.Cozinhas.PodeEditar
+    @CheckSecurity.Cozinhas.PodeEditar
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CozinhaDTO adicionar(@RequestBody @Valid CozinhaInput cozinhaInput) {
@@ -64,7 +64,7 @@ public class CozinhaController implements CozinhaControllerSwagger {
         return cozinhaDTOAssembler.toModel(cozinha);
     }
 
-    //@CheckSecurity.Cozinhas.PodeEditar
+    @CheckSecurity.Cozinhas.PodeEditar
     @PutMapping("/{cozinhaId}")
     public CozinhaDTO atualizar(
             @PathVariable("cozinhaId") Long cozinhaId,
@@ -76,7 +76,7 @@ public class CozinhaController implements CozinhaControllerSwagger {
 
     }
 
-    //@CheckSecurity.Cozinhas.PodeEditar
+    @CheckSecurity.Cozinhas.PodeEditar
     @DeleteMapping("/{cozinhaId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable("cozinhaId") Long cozinhaId) {
