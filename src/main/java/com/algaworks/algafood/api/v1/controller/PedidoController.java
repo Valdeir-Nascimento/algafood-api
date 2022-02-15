@@ -78,7 +78,7 @@ public class PedidoController implements PedidoControllerSwagger {
             novoPedido.setCliente(new Usuario());
 
             //TODO: Pegar usuário logado
-            novoPedido.getCliente().setId(1L);
+            novoPedido.getCliente().setId(algaSecurity.getUsuarioId());
 
             novoPedido = emissaoPedidoService.emitir(novoPedido);
             return pedidoDTOAssembler.toModel(novoPedido);
