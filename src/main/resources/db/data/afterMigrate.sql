@@ -1,5 +1,11 @@
 set foreign_key_checks = 0;
 
+lock tables cidade write, cozinha write, estado write, forma_pagamento write,
+    grupo write, grupo_permissao write, permissao write,
+    produto write, restaurante write, restaurante_forma_pagamento write,
+    restaurante_usuario_responsavel write, usuario write, usuario_grupo write,
+    pedido write, item_pedido write, foto_produto write, oauth_client_details write;
+
 delete from cidade;
 delete from cozinha;
 delete from estado;
@@ -178,7 +184,7 @@ values (6, 5, 3, 1, 87.2, 87.2, null);
 
 
 insert into oauth_client_details (
-  client_id, resource_ids, client_secret, 
+  client_id, resource_ids, client_secret,
   scope, authorized_grant_types, web_server_redirect_uri, authorities,
   access_token_validity, refresh_token_validity, autoapprove
 )
@@ -189,7 +195,7 @@ values (
 );
 
 insert into oauth_client_details (
-  client_id, resource_ids, client_secret, 
+  client_id, resource_ids, client_secret,
   scope, authorized_grant_types, web_server_redirect_uri, authorities,
   access_token_validity, refresh_token_validity, autoapprove
 )
@@ -200,7 +206,7 @@ values (
 );
 
 insert into oauth_client_details (
-  client_id, resource_ids, client_secret, 
+  client_id, resource_ids, client_secret,
   scope, authorized_grant_types, web_server_redirect_uri, authorities,
   access_token_validity, refresh_token_validity, autoapprove
 )
@@ -209,3 +215,5 @@ values (
   'READ,WRITE', 'client_credentials', null, 'CONSULTAR_PEDIDOS,GERAR_RELATORIOS',
   null, null, null
 );
+
+unlock tables;
